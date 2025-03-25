@@ -6,9 +6,9 @@ config()
 const connectDB=async () => {
     try {
         await mongoose.connect(process.env.MONGO_URL)
-        console.log("DB connected");
+        console.log("Databasega ulandi ✅");
     } catch (error) {
-        console.log("error on connect DB");
+        console.log("Databasega ulshda xatolik❌");
         process.exit(1)
     }
 }
