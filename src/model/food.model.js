@@ -14,6 +14,10 @@ const FoodSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    imageUrl: {
+        type: String,
+        required: true
+    },
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",

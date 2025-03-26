@@ -9,16 +9,19 @@
 <body>
     <div class="container">
         <h1>Admin Panel - Food Management</h1>
-        <input type="text" id="foodName" placeholder="Enter food name">
-        <input type="text" id="foodDescription" placeholder="Enter food description">
-        <input type="text" id="foodImage" placeholder="Enter image URL">
-        <input type="number" id="foodPrice" placeholder="Enter food price">
-        <input type="text" id="foodCategory" placeholder="Enter food category">
-        <button onclick="addFood()" class="create">Create Food</button>
+        <!-- Create Form -->
+        <form action="/api/foods" method="POST">
+            <input type="text" name="name" placeholder="Enter food name" required>
+            <input type="text" name="description" placeholder="Enter food description" required>
+            <input type="text" name="imageUrl" placeholder="Enter image URL" required>
+            <input type="number" name="price" placeholder="Enter food price" required>
+            <input type="text" name="category_id" placeholder="Enter food category" required>
+            <button type="submit" class="create">Create Food</button>
+        </form>
     </div>
 
-    <div class="food-list" id="foodList">
-        <% foods.forEach((food, index) => { %>
+    <div class="food-list">
+        <% foods.forEach((food) => { %>
             <div class="food-item">
                 <p class="category"><%= food.category %></p>
                 <img src="<%= food.imageUrl %>" alt="Food Image">
@@ -26,8 +29,11 @@
                 <p class="desc"><%= food.description %></p>
                 <p class="price">Price: $<%= food.price %></p>
                 <div>
-                    <button onclick="openEditModal(<%= index %>)" class="update">Update</button>
-                    <button onclick="deleteFood(<%= index %>)" class="delete">Delete</button>
+                    <button onclick="openEditModal('<%= food._id %>', '<%= food.name %>', '<%= food.description %>', '<%= food.imageUrl %>', <%= food.price %>, '<%= food.category %>')">Update</button>
+                    
+                    <form action="/api/foods/delete/<%= food._id %>" method="POST">
+                        <button type="submit" class="delete">Delete</button>
+                    </form>
                 </div>
             </div>
         <% }) %>
@@ -36,20 +42,20 @@
     <div class="modal" id="editModal">
         <div class="modal-content">
             <h3>Edit Food</h3>
-            <input type="text" id="editName">
-            <input type="text" id="editDescription">
-            <input type="text" id="editImage">
-            <input type="number" id="editPrice">
-            <button onclick="saveEdit()">Save</button>
-            <button onclick="closeModal()">Cancel</button>
+            <form method="POST" id="editForm">
+                <input type="hidden" name="id" id="editId">
+                <input type="text" name="name" id="editName">
+                <input type="text" name="description" id="editDescription">
+                <input type="text" name="imageUrl" id="editImage">
+                <input type="number" name="price" id="editPrice">
+                <input type="text" name="category_id" id="editCategory">
+                <button type="submit">Save</button>
+                <button type="button" onclick="closeModal()">Cancel</button>
+            </form>
         </div>
     </div>
 
-    <script>
-        let foods = <%- JSON.stringify(foods) %>;
-    </script>
-    
-
     <script src="/js/admin.js"></script>
+
 </body>
 </html>

@@ -1,6 +1,7 @@
 body {
     font-family: sans-serif;
     background-image: url('/images/num2.jpg');
+    background-color: black;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

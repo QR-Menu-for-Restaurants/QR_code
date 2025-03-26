@@ -8,5 +8,6 @@ foodRouter.get('/:id', foodController.getFoodById);
 foodRouter.post('/', foodController.createFood);
 foodRouter.put('/:id', foodController.updateFood);
 foodRouter.delete('/:id', foodController.deleteFood);
+console.log("keldi");
 
 export default foodRouter;
