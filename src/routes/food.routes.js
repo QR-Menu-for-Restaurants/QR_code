@@ -10,6 +10,5 @@ foodRouter.get('/:id', foodController.getFoodById);
 foodRouter.post('/', ValidationMiddleware(createFoodSchema), foodController.createFood);
 foodRouter.put('/:id', ValidationMiddleware(updateFoodSchema), foodController.updateFood);
 foodRouter.delete('/:id', foodController.deleteFood);
-console.log("keldi");
 
 export default foodRouter;

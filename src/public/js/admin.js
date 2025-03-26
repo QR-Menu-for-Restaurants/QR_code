@@ -6,7 +6,7 @@ function openEditModal(id, name, description, imageUrl, price, category) {
     document.getElementById("editPrice").value = price;
     document.getElementById("editCategory").value = category;
 
-    document.getElementById("editForm").action = `/api/foods/update/${id}`;
+    document.getElementById("editForm").action = `/foods/update/${id}`;
     document.getElementById("editModal").style.display = "flex";
 }
 

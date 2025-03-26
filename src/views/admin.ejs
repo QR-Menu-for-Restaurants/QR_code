@@ -10,12 +10,12 @@
     <div class="container">
         <h1>Admin Panel - Food Management</h1>
         <!-- Create Form -->
-        <form action="/api/foods" method="POST">
+        <form action="/foods" method="POST">
             <input type="text" name="name" placeholder="Enter food name" required>
             <input type="text" name="description" placeholder="Enter food description" required>
             <input type="text" name="imageUrl" placeholder="Enter image URL" required>
             <input type="number" name="price" placeholder="Enter food price" required>
-            <input type="text" name="category_id" placeholder="Enter food category" required>
+            <input type="text" name="category" placeholder="Enter food category" required>
             <button type="submit" class="create">Create Food</button>
         </form>
     </div>
@@ -23,7 +23,6 @@
     <div class="food-list">
         <% foods.forEach((food) => { %>
             <div class="food-item">
-                <p class="category"><%= food.category %></p>
                 <img src="<%= food.imageUrl %>" alt="Food Image">
                 <h2><%= food.name %></h2>
                 <p class="desc"><%= food.description %></p>
@@ -31,7 +30,7 @@
                 <div>
                     <button onclick="openEditModal('<%= food._id %>', '<%= food.name %>', '<%= food.description %>', '<%= food.imageUrl %>', <%= food.price %>, '<%= food.category %>')">Update</button>
                     
-                    <form action="/api/foods/delete/<%= food._id %>" method="POST">
+                    <form action="/foods/delete/<%= food._id %>" method="POST">
                         <button type="submit" class="delete">Delete</button>
                     </form>
                 </div>
