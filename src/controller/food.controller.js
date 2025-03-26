@@ -5,6 +5,7 @@ import categoryModel from '../model/category.model.js';
 const getAllFoods = async (req, res) => {
     try {
         const foods = await foodModel.find().populate("category");
+
         res.status(200).json({
             message: "Success ✅",
             data: foods
@@ -46,11 +47,17 @@ const getFoodById = async (req, res) => {
 
 const createFood = async (req, res) => {
     try {
-        const { name, price, description, category, imageUrl } = req.body;
+        const { name, price, description, imageUrl, category } = req.body;
 
-        if (!isValidObjectId(category)) {
+        if (!name || !price || !description || !category || !imageUrl) {
             return res.status(400).json({
-                message: "Noto‘g‘ri category_id ❌"
+                message: "name, price, description, imageUrl va category talab qilinadi ❌"
+            });
+        }
+
+        if (!mongoose.isValidObjectId(category)) {
+            return res.status(400).json({
+                message: "Noto‘g‘ri category ID ❌"
             });
         }
 
@@ -71,7 +78,7 @@ const createFood = async (req, res) => {
                     foods: newFood._id
                 }
             }
-        )
+        );
 
         res.status(201).json({
             message: "Ovqat muvaffaqiyatli yaratildi ✅",
@@ -95,10 +102,22 @@ const updateFood = async (req, res) => {
 
         const { name, price, description, category, imageUrl } = req.body;
 
+        if (!name && !price && !description && !category && !imageUrl) {
+            return res.status(400).json({
+                message: "Yangilash uchun hech qanday ma'lumot berilmadi ❌"
+            });
+        }
+
+        if (category && !mongoose.isValidObjectId(category)) {
+            return res.status(400).json({
+                message: "Noto‘g‘ri category ID ❌"
+            });
+        }
+
         const updatedFood = await foodModel.findByIdAndUpdate(
             id,
             { name, price, description, category, imageUrl },
-            { new: true }
+            { new: true, runValidators: true }
         );
 
         if (!updatedFood) {
