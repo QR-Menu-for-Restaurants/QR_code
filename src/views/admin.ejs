@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Restaurant Admin Panel</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel - Food Management</h1>
+        <input type="text" id="foodName" placeholder="Enter food name">
+        <input type="text" id="foodDescription" placeholder="Enter food description">
+        <input type="text" id="foodImage" placeholder="Enter image URL">
+        <input type="number" id="foodPrice" placeholder="Enter food price">
+        <input type="text" id="foodCategory" placeholder="Enter food category">
+        <button onclick="addFood()" class="create">Create Food</button>
+    </div>
+
+    <div class="food-list" id="foodList">
+        <% foods.forEach((food, index) => { %>
+            <div class="food-item">
+                <p class="category"><%= food.category %></p>
+                <img src="<%= food.imageUrl %>" alt="Food Image">
+                <h2><%= food.name %></h2>
+                <p class="desc"><%= food.description %></p>
+                <p class="price">Price: $<%= food.price %></p>
+                <div>
+                    <button onclick="openEditModal(<%= index %>)" class="update">Update</button>
+                    <button onclick="deleteFood(<%= index %>)" class="delete">Delete</button>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3>Edit Food</h3>
+            <input type="text" id="editName">
+            <input type="text" id="editDescription">
+            <input type="text" id="editImage">
+            <input type="number" id="editPrice">
+            <button onclick="saveEdit()">Save</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        let foods = <%- JSON.stringify(foods) %>;
+    </script>
+    
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>
