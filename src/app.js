@@ -5,6 +5,7 @@ import foodRouter from "./routes/food.routes.js";
 import path from "node:path"
 import { fileURLToPath } from 'url';
 import foodModel from "./model/food.model.js";
+import adminRouter from "./routes/aminPanel.route.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -20,19 +21,10 @@ app.set("views",path.join(__dirname,"views"))
 app.use(express.static(path.join(__dirname, "public")));
 
 
-app.get("/admin", async (req, res) => {
-    try {
-        const foods = await foodModel.find();         
-        res.render("admin.ejs", { foods }); 
-    } catch (error) {
-        console.log(error);
-        
-        res.status(500).json({ message: "Xatolik yuz berdi", error: error.message });
-    }
-});
-
 app.use("/api/users",userRouter)
 app.use("/api/categories",categoryRoute);
 app.use("/api/foods",foodRouter);
+app.use("/",adminRouter)
+
 
 export default app

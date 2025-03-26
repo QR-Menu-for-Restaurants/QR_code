@@ -5,6 +5,8 @@ import categoryModel from '../model/category.model.js';
 const getAllFoods = async (req, res) => {
     try {
         const foods = await foodModel.find();
+        console.log();
+        
         res.status(200).json({
             message: "Success ✅", data: foods
         });
@@ -47,11 +49,11 @@ const getFoodById = async (req, res) => {
 
 const createFood = async (req, res) => {
     try {
-        const { name, price, description, category_id } = req.body;
+        const { name, price, description,imageUrl, category_id } = req.body;
 
-        if (!name || !price || !description || !category_id) {
+        if (!name || !price || !description || !category_id || !imageUrl) {
             return res.status(400).json({
-                message: "name, price, description va category_id talab qilinadi ❌"
+                message: "name, price, description,imageUrl va category_id talab qilinadi ❌"
             });
         }
 
@@ -68,7 +70,7 @@ const createFood = async (req, res) => {
             });
         }
 
-        const newFood = new foodModel({ name, price, description, category_id });
+        const newFood = new foodModel({ name, price, description,imageUrl, category_id });
         await newFood.save();
 
         res.status(201).json({
@@ -95,9 +97,9 @@ const updateFood = async (req, res) => {
             });
         }
 
-        const { name, price, description, category_id } = req.body;
+        const { name, price, description, category_id,imageUrl } = req.body;
 
-        if (!name && !price && !description && !category_id) {
+        if (!name && !price && !description && !category_id && !imageUrl) {
             return res.status(400).json({
                 message: "Yangilash uchun hech qanday ma'lumot berilmadi ❌"
             });
@@ -111,7 +113,7 @@ const updateFood = async (req, res) => {
 
         const updatedFood = await foodModel.findByIdAndUpdate(
             id,
-            { name, price, description, category_id },
+            { name, price, description, category_id,imageUrl },
             { new: true, runValidators: true }
         );
 
