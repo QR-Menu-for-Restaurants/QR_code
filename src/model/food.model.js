@@ -14,13 +14,13 @@ const FoodSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    imageUrl: {
-        type: String,
-        required: true
-    },
-    category_id: {
+    category: {  
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
+        required: true
+    },
+    imageUrl: { 
+        type: String,
         required: true
     }
 }, {
