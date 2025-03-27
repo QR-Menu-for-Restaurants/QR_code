@@ -8,12 +8,18 @@ const userSchema = new mongoose.Schema({
     email:{
         type:mongoose.SchemaTypes.String,
         required:true,
-        unique:true
+        unique:true,
+        match:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/gim
     },
     password:{
         type:mongoose.SchemaTypes.String,
         required:true,
         unique:true
+    },
+    role: {
+        type: mongoose.SchemaTypes.String,
+        enum: ["admin", "user"],
+        default: "admin"
     },
 },{
     collection:"users",

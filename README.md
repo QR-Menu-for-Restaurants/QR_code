@@ -37,3 +37,8 @@
     - categoryId (INT) (FK),
     - createdAt,
     - updateAt
+
+
+- user uchun register va login 
+- schema user 
+- user model uchun rol yoziladi
