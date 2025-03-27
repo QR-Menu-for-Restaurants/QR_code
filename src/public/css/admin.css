@@ -1,111 +1,172 @@
+/* Font & Reset */
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #f5f6fa;
-  color: #333;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  background: #f0f2f5;
+  color: #2c3e50;
 }
 
+/* Container */
 .container {
   max-width: 600px;
   margin: 40px auto;
-  background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
 }
 
 .container h1 {
   text-align: center;
-  margin-bottom: 20px;
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #333;
 }
 
-.food-form input, .food-form button {
+/* Form */
+.food-form input,
+.food-form button {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 12px 16px;
+  margin-top: 12px;
+  border-radius: 10px;
+  border: 1px solid #dcdde1;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.food-form input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
 }
 
 .food-form button.create {
-  background-color: #28a745;
+  background-color: #2ecc71;
   color: white;
+  font-weight: bold;
   border: none;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.2s;
 }
 
 .food-form button.create:hover {
-  background-color: #218838;
+  background-color: #27ae60;
 }
 
 .food-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 40px auto;
   max-width: 1200px;
-  margin: 20px auto;
+}
+
+.category-item {
+  background-color: white;
+  position: relative;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.categoryName {
+  z-index: 1;
+  position: absolute;
+  top: -30px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #34495e;
+}
+
+.food-items {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
 }
 
-.food-item {
-  background: #fff;
-  border-radius: 10px;
+.food {
+  background: #fdfdfd;
+  border-radius: 12px;
   padding: 15px;
-  width: 300px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  width: 250px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  transition: transform 0.2s ease;
 }
 
-.food-item img {
+.food:hover {
+  transform: translateY(-5px);
+}
+
+.food img {
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 10px;
 }
 
-.food-item h2 {
-  margin: 10px 0 5px;
+.food-info {
+  margin-top: 12px;
 }
 
-.food-item .price {
-  color: #28a745;
-  font-weight: bold;
+.food-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #2c3e50;
 }
 
-.food-item .category {
-  font-size: 0.9em;
-  color: #888;
+.food-info p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #7f8c8d;
 }
 
-.actions {
-  margin-top: 10px;
+.food-info strong {
+  color: #27ae60;
+}
+
+
+.food-buttons {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
 }
 
-.actions button, .actions form button {
-  padding: 6px 10px;
+.food-buttons button,
+.food-buttons form button {
+  flex: 1;
+  padding: 8px 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 14px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
 }
 
-.actions button {
-  background-color: #007bff;
+.food-buttons button {
+  background-color: #f1c40f;
   color: white;
 }
 
-.actions form button.delete {
-  background-color: #dc3545;
+.food-buttons button:hover {
+  background-color: #d4ac0d;
+}
+
+.food-buttons form button {
+  background-color: #e74c3c;
   color: white;
+}
+
+.food-buttons form button:hover {
+  background-color: #c0392b;
 }
 
 .modal {
   display: none;
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.4);
   justify-content: center;
   align-items: center;
   z-index: 999;
@@ -113,54 +174,70 @@ body {
 
 .modal-content {
   background: white;
-  padding: 25px;
-  border-radius: 10px;
+  padding: 30px;
+  border-radius: 16px;
   width: 90%;
   max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .modal-content input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-top: 10px;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid #ccc;
+  font-size: 16px;
 }
 
 .modal-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 .modal-buttons button {
   flex: 1;
   margin: 0 5px;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 12px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   font-weight: bold;
+  font-size: 15px;
 }
 
 .modal-buttons button[type="submit"] {
-  background-color: #007bff;
+  background-color: #2980b9;
   color: white;
+}
+
+.modal-buttons button[type="submit"]:hover {
+  background-color: #1f618d;
 }
 
 .modal-buttons button[type="button"] {
-  background-color: #6c757d;
+  background-color: #95a5a6;
   color: white;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .container, .modal-content {
-    padding: 20px;
-  }
+.modal-buttons button[type="button"]:hover {
+  background-color: #7f8c8d;
+}
 
-  .food-list {
+/* Responsive */
+@media (max-width: 768px) {
+  .food-items {
     flex-direction: column;
     align-items: center;
+  }
+
+  .food {
+    width: 90%;
+  }
+
+  .container {
+    margin: 20px;
+    padding: 20px;
   }
 }

@@ -3,7 +3,7 @@ function openEditModal(id, name, description, imageUrl, price, category) {
     document.getElementById("editName").value = name;
     document.getElementById("editDescription").value = description;
     document.getElementById("editImage").value = imageUrl;
-    document.getElementById("editPrice").value = price;
+    document.getElementById("editPrice").value = +price;
     document.getElementById("editCategory").value = category;
   
     document.getElementById("editForm").action = `/foods/update/${id}`;
@@ -13,4 +13,9 @@ function openEditModal(id, name, description, imageUrl, price, category) {
   function closeModal() {
     document.getElementById("editModal").style.display = "none";
   }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
   

@@ -20,19 +20,26 @@
   </div>
 
   <div class="food-list">
-    <% foods.forEach((food) => { %>
-      <div class="food-item">
-        <img src="<%= food.imageUrl %>" alt="Food">
-        <h2><%= food.name %></h2>
-        <p><%= food.description %></p>
-        <p class="price">$<%= food.price %></p>
-        <p class="category">📂 <%= food.category %></p>
-        <div class="actions">
-          <button onclick="openEditModal('<%= food._id %>', '<%= food.name %>', '<%= food.description %>', '<%= food.imageUrl %>', '<%= food.price %>', '<%= food.category %>')">✏️ Edit</button>
-          <form action="/foods/delete/<%= food._id %>" method="POST">
-            <button class="delete">🗑️ Delete</button>
-          </form>
-        </div>
+    <% categories.forEach((category) => { %>
+      <div class="category-item">
+        <h2 class="categoryName"><%= category.name %></h2>
+        <div class="food-items">
+          <% category.foods.forEach((food) => { %>
+            <div class="food">
+              <img src="<%= food.imageUrl %>" alt="<%= food.name %>"/>
+              <div class="food-info">
+                <h3><%= food.name %></h3>
+                <p><%= food.description %></p>
+                <p><strong>$<%= food.price %></strong></p>
+                <div class="food-buttons">
+                  <button onclick="openEditModal('<%= food.id %>','<%= food.name %>','<%= food.description %>','<%= food.imageUrl %>','<%= food.price %>','<%= food.category %>')">✏️ Edit</button>
+                  <form action="/foods/delete/<%= food.id %>" method="POST">
+                    <button type="submit">🗑️ Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          <% }) %>
       </div>
     <% }) %>
   </div>
