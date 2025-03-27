@@ -28,7 +28,7 @@
                 <p class="desc"><%= food.description %></p>
                 <p class="price">Price: $<%= food.price %></p>
                 <div>
-                    <button onclick="openEditModal('<%= food._id %>', '<%= food.name %>', '<%= food.description %>', '<%= food.imageUrl %>', <%= food.price %>, '<%= food.category %>')">Update</button>
+                    <button onclick="openEditModal('<%= food._id %>', '<%= food.name %>', '<%= food.description %>', '<%= food.imageUrl %>', '<%= food.price %>', '<%= food.category %>')">Update</button>
                     
                     <form action="/foods/delete/<%= food._id %>" method="POST">
                         <button type="submit" class="delete">Delete</button>
