@@ -30,10 +30,11 @@ const registerUser = async (request, response) => {
 
         await user.save();
 
-        response.status(201).send({
-            message: "user created successfully",
-            user
-        });
+        response.redirect('/register')
+        // response.status(201).send({
+        //     message: "user created successfully",
+        //     user
+        // });
 
     } catch (error) {
         response.status(500).send({
@@ -73,10 +74,7 @@ const loginUser = async (request, response) => {
             });
         }
 
-        return response.status(200).json({
-            message: "Login successful",
-            data: user
-        });
+        response.redirect("/admin")
 
     } catch (error) {
         console.error("Login error:", error);
