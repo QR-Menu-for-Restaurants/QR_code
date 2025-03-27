@@ -4,12 +4,48 @@ import categoryModel from '../model/category.model.js';
 
 const getAllFoods = async (req, res) => {
     try {
-        const foods = await foodModel.find().populate("category");
+        let { limit = 10, page = 1, sortField = 'created_at', sortOrder = 'ASC', category, minPrice, maxPrice, name } = req.query;
 
-        res.status(200).json({
+        if (Array.isArray(limit) || Array.isArray(page)) {
+            return res.status(400).json({ message: "Limit and page should be single values" });
+        }
+
+        limit = parseInt(limit) || 10;
+        page = parseInt(page) || 1;
+
+        if (!Number.isInteger(limit) || !Number.isInteger(page) || limit <= 0 || page <= 0) {
+            return res.status(400).json({ message: "Limit and page should be positive integers" });
+        }
+
+        const sortFieldArr = ["name", "price", "created_at"];
+        const sortOrderArr = ["ASC", "DESC"];
+
+        if (!sortFieldArr.includes(sortField)) sortField = "created_at";
+        if (!sortOrderArr.includes(sortOrder)) sortOrder = "ASC";
+
+        let filter = {};
+        if (category) filter.category = category;
+        if (minPrice) filter.price = { ...filter.price, $gte: parseFloat(minPrice) };
+        if (maxPrice) filter.price = { ...filter.price, $lte: parseFloat(maxPrice) };
+        if (name) filter.name = { $regex: name, $options: "i" };
+
+        const foods = await foodModel.find(filter)
+            .populate("category")
+            .sort({ [sortField]: sortOrder === "ASC" ? 1 : -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        const total = await foodModel.countDocuments(filter);
+
+        res.status(200).send({
             message: "Success ✅",
+            totalCategory: total,
+            page,
+            limit,
             data: foods
         });
+
+        
     } catch (error) {
         res.status(500).json({
             message: "Serverda xatolik ❌",
