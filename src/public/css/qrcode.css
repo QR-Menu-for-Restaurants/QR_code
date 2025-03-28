@@ -1,0 +1,67 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('https://cdn.pixabay.com/photo/2021/11/01/15/55/pho-6760889_1280.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.menu-card {
+    width: 320px;
+    padding: 30px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 12px;
+    border: 2px solid gold;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.qr-box {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    margin: 10px auto;
+    width: fit-content;
+}
+
+.qr-box img {
+    width: 160px;
+    height: 160px;
+}
+
+.link-box {
+    margin-top: 10px;
+}
+
+.link-box a {
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    width: 180px;
+    color: gold;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 15px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.link-box a:hover {
+    background: gold;
+    color: black;
+}
+.menu{
+    color: aliceblue;
+    letter-spacing: 3px;
+
+}
