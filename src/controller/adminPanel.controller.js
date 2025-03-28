@@ -2,6 +2,7 @@ import foodModel from "../model/food.model.js";
 import categoryModel from "../model/category.model.js";
 import mongoose from "mongoose";
 
+
 const getAllFoods = async (req, res) => {
     try {
         
@@ -13,20 +14,24 @@ const getAllFoods = async (req, res) => {
 }
 const addFood = async (req, res) => {
     try {
-        const { name, price, description, imageUrl, category } = req.body;
-
-        if (!name || !price || !description || !category || !imageUrl) {
+        const { name, price, description, category } = req.body;
+        
+        if (!name || !price || !description || !category ) {
             return res.status(400).json({
                 message: "name, price, description, imageUrl va category talab qilinadi ❌"
             });
         }
-
+        if (!req.file) {
+            return res.status(400).json({
+              message: "Rasm yuborilmadi ❌",
+            });
+          }
         if (!mongoose.isValidObjectId(category)) {
             return res.status(400).json({
-                message: "Noto‘g‘ri category ID ❌"
+                message: "Notogri category ID ❌"
             });
         }
-
+        
         const categoryExists = await categoryModel.findById(category);
         if (!categoryExists) {
             return res.status(404).json({
@@ -34,6 +39,7 @@ const addFood = async (req, res) => {
             });
         }
 
+        const imageUrl = "/uploads/" + req.file.filename;
         const newFood = new foodModel({ name, price, description, category, imageUrl });
         await newFood.save();
 
@@ -48,6 +54,8 @@ const addFood = async (req, res) => {
 
         res.redirect("/admin");
     } catch (error) {
+        console.log(error);
+        
         res.status(500).json({
             message: "Serverda xatolik ❌",
             error: error.message
@@ -64,10 +72,9 @@ const deleteFood = async (req, res) => {
 }
 const updateFood = async (req, res) => {
     try {
-        const { name, description, imageUrl, price, category } = req.body;
-        console.log("keldi");
-        
-        await foodModel.findByIdAndUpdate(req.params.id, { name, description, imageUrl, price, category });
+        const { name, description, price, category } = req.body;
+        const imageUrl = "/uploads/" + req.file.filename;
+        await foodModel.findByIdAndUpdate(req.params.id, { name, description,imageUrl, price, category });
         res.redirect("/admin");
     } catch (error) {
         console.error(error);

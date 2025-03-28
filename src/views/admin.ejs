@@ -9,10 +9,10 @@
 <body>
   <div class="container">
     <h1>🍽️ Food Management</h1>
-    <form action="/foods" method="POST" class="food-form">
+    <form action="/foods" method="POST" enctype="multipart/form-data" class="food-form">
       <input type="text" name="name" placeholder="Food Name" required>
       <input type="text" name="description" placeholder="Description" required>
-      <input type="text" name="imageUrl" placeholder="Image URL" required>
+      <input type="file" name="imageUrl" accept="image/*" required>
       <input type="number" name="price" placeholder="Price ($)" required>
       <input type="text" name="category" placeholder="Category" required>
       <button type="submit" class="create">➕ Create</button>
@@ -26,7 +26,7 @@
         <div class="food-items">
           <% category.foods.forEach((food) => { %>
             <div class="food">
-              <img src="<%= food.imageUrl %>" alt="<%= food.name %>"/>
+              <img src="<%= food.imageUrl %>" />
               <div class="food-info">
                 <h3><%= food.name %></h3>
                 <p><%= food.description %></p>
@@ -47,11 +47,11 @@
   <div class="modal" id="editModal">
     <div class="modal-content">
       <h3>✏️ Edit Food</h3>
-      <form method="POST" id="editForm">
+      <form method="POST" id="editForm" enctype="multipart/form-data">
         <input type="hidden" name="id" id="editId">
         <input type="text" name="name" id="editName" required>
         <input type="text" name="description" id="editDescription" required>
-        <input type="text" name="imageUrl" id="editImage" required>
+        <input type="file" name="imageUrl" id="editImage" required>
         <input type="number" name="price" id="editPrice" required>
         <input type="text" name="category" id="editCategory" required>
         <div class="modal-buttons">
