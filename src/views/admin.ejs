@@ -23,8 +23,9 @@
     <% categories.forEach((category) => { %>
       <div class="category-item">
         <h2 class="categoryName"><%= category.name %></h2>
-        <div class="food-items">
-          <% category.foods.forEach((food) => { %>
+        <% category.foods.forEach((food) => { %>
+          <div class="food-items">
+          <% console.log(category.name) %>
             <div class="food">
               <img src="<%= food.imageUrl %>" />
               <div class="food-info">
@@ -39,6 +40,7 @@
                 </div>
               </div>
             </div>
+          </div>
           <% }) %>
       </div>
     <% }) %>
