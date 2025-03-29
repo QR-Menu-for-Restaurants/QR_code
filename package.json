@@ -1,6 +1,6 @@
 {
   "name": "qr-menu-for-restaurants",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "main": "index.js",
   "type": "module",
   "scripts": {
