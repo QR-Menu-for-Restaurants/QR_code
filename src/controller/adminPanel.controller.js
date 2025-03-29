@@ -1,42 +1,34 @@
 import foodModel from "../model/food.model.js";
 import categoryModel from "../model/category.model.js";
 import mongoose from "mongoose";
+import { BaseException } from "../exceptions/base.exception.js";
 
 
-const getAllFoods = async (req, res) => {
+const getAllFoods = async (req, res,next) => {
     try {
         
         const categories = await categoryModel.find().populate("foods"); 
         res.render("admin", { categories });
     } catch (error) {
-        res.status(500).json({ message: "Error getting foods", error: error.message });
-    }
+        next(new BaseException("Error getting foods",500));      }
 }
-const addFood = async (req, res) => {
+const addFood = async (req, res,next) => {
     try {
         const { name, price, description, category } = req.body;
         
         if (!name || !price || !description || !category ) {
-            return res.status(400).json({
-                message: "name, price, description, imageUrl va category talab qilinadi ❌"
-            });
+            throw new BaseException('name , price and description are required',400);
         }
         if (!req.file) {
-            return res.status(400).json({
-              message: "Rasm yuborilmadi ❌",
-            });
+            throw new BaseException('image is not sent',400);
           }
         if (!mongoose.isValidObjectId(category)) {
-            return res.status(400).json({
-                message: "Notogri category ID ❌"
-            });
+            throw new BaseException('incorrect id',400);
         }
         
         const categoryExists = await categoryModel.findById(category);
         if (!categoryExists) {
-            return res.status(404).json({
-                message: "Kategoriya topilmadi ❌"
-            });
+            throw new BaseException('category is not found',400);
         }
 
         const imageUrl = "/uploads/" + req.file.filename;
@@ -54,31 +46,29 @@ const addFood = async (req, res) => {
 
         res.redirect("/admin");
     } catch (error) {
-        console.log(error);
-        
-        res.status(500).json({
-            message: "Serverda xatolik ❌",
-            error: error.message
-        });
+        next(error);
     }
 };
-const deleteFood = async (req, res) => {
+const deleteFood = async (req, res,next) => {
     try {
         await foodModel.findByIdAndDelete(req.params.id);
         res.redirect("/admin");
     } catch (error) {
-        res.status(500).json({ message: "Error deleting food", error: error.message });
+        next(new BaseException("couldn't find id to delete from food ",500))
     }
 }
-const updateFood = async (req, res) => {
+const updateFood = async (req, res,next) => {
     try {
         const { name, description, price, category } = req.body;
         const imageUrl = "/uploads/" + req.file.filename;
+
+        if (!imageUrl) {
+            throw new BaseException("image urls are required", 400);
+        }
         await foodModel.findByIdAndUpdate(req.params.id, { name, description,imageUrl, price, category });
         res.redirect("/admin");
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Error updating food");
+        next(error);
     }
 }
 

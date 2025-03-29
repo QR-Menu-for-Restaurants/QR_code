@@ -1,8 +1,9 @@
 import QRCode from 'qrcode';
 import os from 'os';
 import { PORT } from '../config/app.config.js';
+import { BaseException } from '../exceptions/base.exception.js';
 
-const getLocalIp = () => {
+export const getLocalIp = () => {
     const interfaces = os.networkInterfaces();
     for (const name of Object.keys(interfaces)) {
         for (const net of interfaces[name]) {
@@ -14,7 +15,7 @@ const getLocalIp = () => {
     return 'localhost';
 };
 
-export const generateQR = async (req, res) => {
+export const generateQR = async (req, res,next) => {
     try {
         const localIp = getLocalIp();
         const qrUrl = `http://${localIp}:${PORT}/menu`; 
@@ -22,7 +23,6 @@ export const generateQR = async (req, res) => {
 
         res.render("qrcode", { qrImage, qrUrl }); 
     } catch (error) {
-        console.error("QR Code yaratishda xatolik:", error);
-        res.status(500).send("Xatolik yuz berdi");
+        next(new BaseException("invalid qrcode",500));
     }
 };

@@ -6,6 +6,7 @@ import router from "./routes/index.js"
 import userRouter from "./routes/user.route.js";
 import qrRouter from "./routes/qrcode.route.js";
 import menuRouter from "./routes/menu.route.js";
+import { ErrorHandlerMiddleware } from "./middleware/error.handler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,8 @@ app.use("/", qrRouter);
 app.use("/api", router)
 app.use("/", adminRouter)
 app.use("/",userRouter)
-app.use("/",menuRouter)
+app.use("/",menuRouter);
+
+app.use(ErrorHandlerMiddleware);
 
 export default app

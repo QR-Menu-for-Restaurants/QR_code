@@ -2,22 +2,19 @@ import { hash } from "bcrypt";
 import { compare } from "bcrypt";
 import { isValidObjectId } from "mongoose";
 import userModel from "../model/user.model.js";
+import { BaseException } from "../exceptions/base.exception.js";
 
-const registerUser = async (request, response) => {
+const registerUser = async (request, response,next) => {
     try {
         const { name, email, password } = request.body;
 
         if (!name || !email || !password) {
-            return response.status(400).send({
-                message: "name, email or password is not given"
-            });
+            throw new BaseException("Invalid username or email",404);
         }
 
         const foundedUser = await userModel.findOne({ email });
         if (foundedUser) {
-            return response.status(409).send({
-                message: "user already exists"
-            });
+            throw new BaseException("user already exists",409);
         }
 
         const hashedPassword = await hash(password, 10);
@@ -31,57 +28,41 @@ const registerUser = async (request, response) => {
         await user.save();
 
         response.redirect('/register')
-        // response.status(201).send({
-        //     message: "user created successfully",
-        //     user
-        // });
+        
 
     } catch (error) {
-        response.status(500).send({
-            message: "Error on registering user",
-            error: error.message
-        });
+        next(error);
     }
 };
 
 
 
-const loginUser = async (request, response) => {
+const loginUser = async (request, response,next) => {
     try {
         const { email, password } = request.body;
 
 
         if (!email || !password) {
-            return response.status(400).json({
-                message: "Email or password is not given"
-            });
+            throw new BaseException("Invalid email or password",400)
         }
 
         const user = await userModel.findOne({ email });
 
 
         if (!user) {
-            return response.status(401).json({
-                message: "Invalid email or password"
-            });
+            throw new BaseException("user not found",404);
         }
 
         const isMatch = await compare(password, user.password);
 
         if (!isMatch) {
-            return response.status(401).json({
-                message: "Invalid email or password"
-            });
+            throw new BaseException("password mismatch",401);
         }
 
         response.redirect("/admin")
 
     } catch (error) {
-        console.error("Login error:", error);
-        return response.status(500).json({
-            message: "Error on login",
-            error: error.message
-        });
+        next(error);
     }
 };
 
@@ -100,19 +81,15 @@ const getAllUsers=async (req,res) => {
         })
     }
 }
-const createUser = async (req, res) => {
+const createUser = async (req, res,next) => {
     try {
         const {name,email,password}=req.body
         if(!(name && email && password)){
-            return res.status(400).send({
-                message:"name,email or password is not given"
-            })
+            throw new BaseException("name , email and password are required!",400)
         }
         const foundUser=await userModel.findOne({email})
         if(foundUser){
-            return res.status(409).send({
-                message:"user is already have"
-            })
+            throw new BaseException("user already exists",409);
         }
         const user = new userModel({
             name,
@@ -125,24 +102,18 @@ const createUser = async (req, res) => {
             data: user
         })
     } catch (error) {
-        res.status(500).send({
-            message: "Error on create category"
-        })
+        next(error);
     }
 }
-const updateUser = async (req, res) => {
+const updateUser = async (req, res,next) => {
     try {
         const id=req.params.id
         if (!isValidObjectId(id)) {
-            res.status(400).send({
-                message: "id not true given"
-            })
+            throw new BaseException("invalid id",400);
         }
         const {name,email,password}=req.body
         if(!(name && email && password)){
-            return res.status(400).send({
-                message:"name,email or password is not given"
-            })
+            throw new BaseException("email,password and name are not given",400);
         }
         
         const user = await userModel.findByIdAndUpdate(id,{
@@ -156,29 +127,19 @@ const updateUser = async (req, res) => {
             data: user
         })
     } catch (error) {
-        console.log(error);
-        
-        res.status(500).send({
-            message: "Error on create category"
-        })
+        next(error);
     }
 }
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res,next) => {
     try {
         const id=req.params.id
         if (!isValidObjectId(id)) {
-            res.status(400).send({
-                message: "id not true given"
-            })
+            throw new BaseException("invalid id",400);
         }        
         await userModel.findByIdAndDelete(id)
         return res.status(204).send()
     } catch (error) {
-        console.log(error);
-        
-        res.status(500).send({
-            message: "Error on create category"
-        })
+        next(error);
     }
 }
 export default {registerUser,loginUser,getAllUsers,createUser,updateUser,deleteUser}
