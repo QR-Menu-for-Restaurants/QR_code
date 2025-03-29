@@ -17,7 +17,7 @@ const getLocalIp = () => {
 export const generateQR = async (req, res) => {
     try {
         const localIp = getLocalIp();
-        const qrUrl = `http://${localIp}:${PORT}/register`; 
+        const qrUrl = `http://${localIp}:${PORT}/menu`; 
         const qrImage = await QRCode.toDataURL(qrUrl);
 
         res.render("qrcode", { qrImage, qrUrl }); 

@@ -5,6 +5,7 @@ import adminRouter from "./routes/aminPanel.route.js";
 import router from "./routes/index.js"
 import userRouter from "./routes/user.route.js";
 import qrRouter from "./routes/qrcode.route.js";
+import menuRouter from "./routes/menu.route.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,9 +21,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 app.use("/", qrRouter);
-
 app.use("/api", router)
 app.use("/", adminRouter)
 app.use("/",userRouter)
+app.use("/",menuRouter)
 
 export default app

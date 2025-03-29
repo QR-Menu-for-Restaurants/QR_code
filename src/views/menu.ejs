@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    <link rel="stylesheet" href="/css/menu.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="header">
+            <div class="logo">Menu</div>
+            <div class="register">
+                <button><a href="/login">Login</a></button>
+                <button><a href="/register">Signup</a></button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <% categories.forEach(category=> { %>
+            <h2>Category: <%= category.name %>
+            </h2>
+            <div class="foods">
+                <% category.foods.forEach(food=> { %>
+                    <div class="food-item">
+                        <img src="<%= food.imageUrl %>" alt="<%= food.name %>">
+                        <div class="food-info">
+                            <h3>
+                                <%= food.name %>
+                            </h3>
+                            <p>
+                                <%= food.description %>
+                            </p>
+                            <p class="price">$<%= food.price %>
+                            </p>
+                        </div>
+                        <div class="icons">
+                            <i class="bx bx-heart like-icon"></i>
+                            <i class="bx bx-cart-add cart-icon"></i>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+            <% }) %>
+    </main>
+</body>
+
+</html>
