@@ -19,7 +19,15 @@ const userSchema = new mongoose.Schema({
     role: {
         type: mongoose.SchemaTypes.String,
         enum: ["admin", "user"],
-        default: "admin"
+        default: "user"
+    },
+    tokens: {
+        accessToken: {
+            type: mongoose.SchemaTypes.String,
+        },
+        refreshToken: {
+            type: mongoose.SchemaTypes.String,
+        },
     },
 },{
     collection:"users",
