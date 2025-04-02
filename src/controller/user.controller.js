@@ -47,7 +47,7 @@ const registerUser = async (request, response, next) => {
 
         await user.save();
 
-        response.redirect('/register')
+        response.redirect('/categories')
 
 
     } catch (error) {
@@ -118,15 +118,7 @@ const loginUser = async (req, res, next) => {
             { expiresIn: REFRESH_TOKEN_EXPIRE_TIME }
         );
 
-        res.json({
-            status: "Success✅",
-            message: "Tizimga muvaffaqiyatli kirildi",
-            tokens: {
-                accessToken,
-                refreshToken
-            },
-            data: user
-        });
+        res.redirect("/categories")
 
     } catch (error) {
         next(error);

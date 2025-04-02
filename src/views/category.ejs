@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/css/category.css" />
+  <title>Category</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Category</h1>
+
+    <form action="/categories" method="POST" enctype="multipart/form-data" class="category-form">
+      <input type="text" name="name" placeholder="Category Name" required>
+      <input type="file" name="image" accept="image/*">
+      <button type="submit">➕ Add Category</button>
+    </form>
+  </div>
+
+  <div class="category-list">
+    <% categories.forEach((category) => { %>
+      <div class="category-item" id="category-<%= category._id %>">
+        <h2><%= category.name %></h2>
+        <a href="/admin/categories/<%= category._id %>">
+          <img src="<%= category.imageUrl %>" alt="Category Image" class="category-img">
+        </a>
+
+        <div class="category-buttons">
+          <button onclick="openEditModal('<%= category._id %>', '<%= category.name %>')">✏️ Edit</button>
+
+          <button onclick="deleteCategory('<%= category._id %>')">🗑️ Delete</button>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <h3>✏️ Edit Category</h3>
+      <form method="POST" id="editForm" enctype="multipart/form-data">
+        <input type="hidden" name="id" id="editId">
+        <input type="text" name="name" id="editName" required>
+        <input type="file" name="image" id="editImage">
+        <div class="modal-buttons">
+          <button type="submit">💾 Save</button>
+          <button type="button" onclick="closeModal()">❌ Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/category.js"></script>
+</body>
+
+</html>

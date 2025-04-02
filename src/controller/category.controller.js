@@ -2,124 +2,101 @@ import { isValidObjectId } from "mongoose";
 import categoryModel from "../model/category.model.js";
 import { BaseException } from "../exceptions/base.exception.js";
 
-const getAllCategories = async (req, res,next) => {
-    try {
-        let { limit = 10, page = 1, sortField = "_id", sortOrder = "ASC" } = req.query;
-
-        limit = Number(Array.isArray(limit) ? limit[0] : limit);
-        page = Number(Array.isArray(page) ? page[0] : page);
-
-        if (isNaN(limit) || isNaN(page)) {
-            throw new BaseException("not a number",400);
-        }
-
-        const sortFieldArr = ["_id", "name", "createdAt"];
-        const sortOrderArr = ["ASC", "DESC"];
-
-        if (!sortFieldArr.includes(sortField) || !sortOrderArr.includes(sortOrder)) {
-            throw new BaseException("sortField and sortOrder must be the same",400);
-        }
-
-        const skip = (page - 1) * limit;
-        const order = sortOrder === "ASC" ? 1 : -1;
-
-        const allCategory = await categoryModel.countDocuments();
-        const categories = await categoryModel.find().populate("foods")
-            .sort({ [sortField]: order })
-            .limit(limit).
-            skip(skip);
-
-        res.json({
-            message: "Success✅",
-            totalCategory: allCategory,
-            limit,
-            page,
-            data: categories,
-        });
-    } catch (error) {
-        next(error);
-    }
+const getAllCategories = async (req, res, next) => {
+  try {
+    const categories = await categoryModel.find().populate("foods");
+    res.render("category", { categories });
+  } catch (error) {
+    next(new BaseException("Error getting categories", 500));
+  }
 };
 
-const getCategoryById = async (req, res,next) => {
+const getCategoryById = async (req, res, next) => {
     try {
-        const id = req.params.id;
-
-        if (!isValidObjectId(id)) {
-            throw new BaseException('invalid id',404);
-        }
-        const category = await categoryModel.findById(id);
-        res.json({
-            message: "Id boyicha ma'lumot",
-            data: category
-        });
+      const id = req.params.id;
+      if (!isValidObjectId(id)) {
+        throw new BaseException("Invalid category ID", 404);
+      }
+      const selectedCategory = await categoryModel.findById(id).populate("foods");
+  
+      if (!selectedCategory) {
+        return res.status(404).render("404", { message: "Category not found" });
+      }
+  
+      const categories = await categoryModel.find(); 
+  
+      res.render("admin", { categories, selectedCategory }); 
     } catch (error) {
-        next(error);
+      next(error);
     }
+  };
+  
+const createCategory = async (req, res, next) => {
+  try {
+    const { name } = req.body;
+    if (!name) {
+      throw new BaseException("Category name is required", 400);
+    }
+
+    const existingCategory = await categoryModel.findOne({ name });
+    if (existingCategory) {
+      throw new BaseException("Category already exists", 409);
+    }
+
+    const imageUrl = req.file ? "/uploads/" + req.file.filename : "";
+    const newCategory = new categoryModel({ name, imageUrl });
+    await newCategory.save();
+
+    res.redirect("/categories");
+  } catch (error) {
+    next(error);
+  }
 };
 
-const createCategory = async (req, res) => {
-    try {
-        const { name } = req.body;
-        if (!name) {
-            throw new BaseException("invalid name or should be set",400)
-        }
-
-        const foundedCategory = await categoryModel.findOne({ name });
-        if (foundedCategory) {
-            throw new BaseException("category already exists",409);
-        }
-
-        const newCategory = new categoryModel({ name });
-        await newCategory.save();
-
-        res.status(201).json({
-            message: "Yangi category qo'shildi",
-            data: newCategory
-        });
-    } catch (error) {
-        next(error);
+const updateCategory = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      throw new BaseException("Invalid category ID", 404);
     }
+
+    const { name } = req.body;
+    if (!name) {
+      throw new BaseException("Category name is required", 400);
+    }
+
+    const imageUrl = req.file ? "/uploads/" + req.file.filename : undefined;
+    const updateData = imageUrl ? { name, imageUrl } : { name };
+
+    const category = await categoryModel.findByIdAndUpdate(id, updateData, { new: true });
+    res.redirect("/categories");
+  } catch (error) {
+    next(error);
+  }
 };
 
-const updateCategory = async (req, res,next) => {
-    try {
-        const id = req.params.id;
-        if (!isValidObjectId(id)) {
-            throw new BaseException('id has to be written',404)
-        }
-
-        const { name } = req.body;
-        if (!name) {
-            throw new BaseException('name has to be required',404);
-        }
-
-        const foundedCategory = await categoryModel.findOne({ name });
-        if (foundedCategory) {
-            throw new BaseException('catefory exists',404);
-        }
-
-        const category = await categoryModel.findByIdAndUpdate(id, { name }, { new: true });
-        res.json({
-            message: "Id bo'yicha category yangilandi",
-            data: category
-        });
-    } catch (error) {
-        next(error);
+const deleteCategory = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      throw new BaseException("Invalid category ID", 404);
     }
+
+    const category = await categoryModel.findByIdAndDelete(id);
+    if (!category) {
+      throw new BaseException("Category not found", 404);
+    }
+
+    res.json({ message: "Category deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteCategory = async (req, res) => {
-    try {
-        const id = req.params.id;
-        if (!isValidObjectId(id)) {
-            throw new BaseException("id must be a valid",404);
-        }
-        await categoryModel.findByIdAndDelete(id);
-        res.status(204).send();
-    } catch (error) {
-        next(error);
-    }
+export default {
+  getAllCategories,
+  getCategoryById,
+  createCategory,
+  updateCategory,
+  deleteCategory,
 };
-
-export default { getAllCategories, getCategoryById, createCategory, updateCategory, deleteCategory };

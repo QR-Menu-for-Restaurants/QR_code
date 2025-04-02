@@ -1,51 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="/css/admin.css"/>
-  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/css/admin.css" />
+  <title>
+    <%= selectedCategory ? selectedCategory.name : "Admin Panel" %> - Foods
+  </title>
 </head>
+
 <body>
   <div class="container">
-    <h1>🍽️ Food Management</h1>
-    <form action="/foods" method="POST" enctype="multipart/form-data" class="food-form">
-      <input type="text" name="name" placeholder="Food Name" required>
-      <input type="text" name="description" placeholder="Description" required>
-      <input type="file" name="imageUrl" accept="image/*" required>
-      <input type="number" name="price" placeholder="Price ($)" required>
-      <input type="text" name="category" placeholder="Category" required>
-      <button type="submit" class="create">➕ Create</button>
-    </form>
+    <h1>🍽️ <%= selectedCategory ? selectedCategory.name : 'Category not found' %></h1>
+
+    <% if (selectedCategory) { %>
+      <form action="/foods" method="POST" enctype="multipart/form-data" class="food-form">
+        <input type="hidden" name="category" value="<%= selectedCategory._id %>">
+        <input type="text" name="name" placeholder="Food Name" required>
+        <input type="text" name="description" placeholder="Description" required>
+        <input type="file" name="imageUrl" accept="image/*" required> 
+        <input type="number" name="price" placeholder="Price ($)" required>
+        <button type="submit" class="create">➕ Create</button>
+      </form>
+    <% } %>
   </div>
 
   <div class="food-list">
-    <% categories.forEach((category) => { %>
-      <div class="category-item">
-        <h2 class="categoryName"><%= category.name %></h2>
+    <% if (selectedCategory) { %>
+      <% selectedCategory.foods.forEach((food) => { %>
+        <div class="food-items">
+          <div class="food">
+            <img src="<%= food.imageUrl %>" alt="<%= food.name %>" />
+            <div class="food-info">
+              <h3><%= food.name %></h3>
+              <p><%= food.description %></p>
+              <p><strong>$<%= food.price %></strong></p>
+              <div class="food-buttons">
+                <button onclick="openEditModal('<%= food._id %>','<%= food.name %>','<%= food.description %>','<%= food.imageUrl %>','<%= food.price %>','<%= food.category %>')">✏️ Edit</button>
+                <div id="foods-<%= food._id %>">
+                  <button onclick="deleteFood('<%= food._id %>')">🗑️ Delete</button>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <% categories.forEach((category) => { %>
+        <h2><%= category.name %> Taomlari</h2>
         <% category.foods.forEach((food) => { %>
           <div class="food-items">
-          <% console.log(category.name) %>
             <div class="food">
-              <img src="<%= food.imageUrl %>" />
+              <img src="<%= food.imageUrl %>" alt="<%= food.name %>" />
               <div class="food-info">
                 <h3><%= food.name %></h3>
                 <p><%= food.description %></p>
                 <p><strong>$<%= food.price %></strong></p>
                 <div class="food-buttons">
-                  <button onclick="openEditModal('<%= food.id %>','<%= food.name %>','<%= food.description %>','<%= food.imageUrl %>','<%= food.price %>','<%= food.category %>')">✏️ Edit</button>
-                  <form action="/foods/delete/<%= food.id %>" method="POST">
-                    <button type="submit">🗑️ Delete</button>
-                  </form>
+                  <button onclick="openEditModal('<%= food._id %>', '<%= food.name %>', '<%= food.description %>', '<%= food.price %>')">✏️ Edit</button>
+                  <div id="foods-<%= food._id %>">
+                    <button onclick="deleteFood('<%= food._id %>')">🗑️ Delete</button>
+                  </div>
+                  
                 </div>
               </div>
             </div>
           </div>
-          <% }) %>
-      </div>
-    <% }) %>
+        <% }) %>
+      <% }) %>
+    <% } %>
   </div>
-
   <div class="modal" id="editModal">
     <div class="modal-content">
       <h3>✏️ Edit Food</h3>
@@ -53,9 +79,8 @@
         <input type="hidden" name="id" id="editId">
         <input type="text" name="name" id="editName" required>
         <input type="text" name="description" id="editDescription" required>
-        <input type="file" name="imageUrl" id="editImage" required>
+        <input type="file" name="imageUrl" id="editImage"> 
         <input type="number" name="price" id="editPrice" required>
-        <input type="text" name="category" id="editCategory" required>
         <div class="modal-buttons">
           <button type="submit">💾 Save</button>
           <button type="button" onclick="closeModal()">❌ Cancel</button>
@@ -63,7 +88,9 @@
       </form>
     </div>
   </div>
+  
 
   <script src="/js/admin.js"></script>
 </body>
+
 </html>

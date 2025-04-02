@@ -1,15 +1,12 @@
 import { Router } from "express";
-import categoryController from "../controller/category.controller.js";
-import { ValidationMiddleware } from "../middleware/validation.middleware.js";
-import { createCategorySchema, updateCategorySchema } from "../Schema/category.schema.js";
+import categoryController from "../controller/category.controller.js"
+import upload from "../utils/upload.js";
 
-const categoryRoute = Router()
+const categoryRouter = Router();
 
-categoryRoute
-    .get("/", categoryController.getAllCategories)
-    .get("/:id", categoryController.getCategoryById)
-    .post("/", ValidationMiddleware(createCategorySchema), categoryController.createCategory)
-    .put("/:id", ValidationMiddleware(updateCategorySchema), categoryController.updateCategory)
-    .delete("/:id", categoryController.deleteCategory)
-
-export default categoryRoute
+categoryRouter.get("/", categoryController.getAllCategories);
+categoryRouter.get("/:id", categoryController.getCategoryById);
+categoryRouter.post("/", upload.single("image"), categoryController.createCategory);
+categoryRouter.post("/update/:id", upload.single("image"), categoryController.updateCategory);
+categoryRouter.delete("/:id", categoryController.deleteCategory);
+export default categoryRouter;

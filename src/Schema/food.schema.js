@@ -1,11 +1,11 @@
 import Joi from "joi";
 
 export const createFoodSchema = Joi.object({
-    name: Joi.string().required(),
+    name: Joi.string(),
     description: Joi.string(),
-    price: Joi.number().positive().required(),
+    price: Joi.number().positive(),
     imageUrl: Joi.string(),
-    category: Joi.string().required(),
+    category: Joi.string(),
 }).required()
 
 export const updateFoodSchema = Joi.object({

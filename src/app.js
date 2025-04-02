@@ -20,13 +20,11 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 app.use(express.static(path.join(__dirname, "public")));
 
-
 app.use("/", qrRouter);
-app.use("/api", router)
+app.use("/",router)
 app.use("/", adminRouter)
 app.use("/",userRouter)
 app.use("/",menuRouter);
-
 app.use(ErrorHandlerMiddleware);
 
 export default app
