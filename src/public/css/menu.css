@@ -194,3 +194,14 @@ h2 {
         font-size: 20px;
     }
 }
+.like-icon {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.like-icon.active {
+    color: red;
+}
+.cart-icon.added {
+    color: green;
+}
