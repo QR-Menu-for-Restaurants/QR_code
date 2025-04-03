@@ -26,3 +26,4 @@ export const generateQR = async (req, res,next) => {
         next(new BaseException("invalid qrcode",500));
     }
 };
+
