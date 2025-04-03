@@ -12,7 +12,7 @@ export const getLocalIp = () => {
             }
         }
     }
-    return 'localhost';
+    return net.address;
 };
 
 export const generateQR = async (req, res,next) => {

@@ -38,6 +38,11 @@
     - createdAt,
     - updateAt
 
+4. orders:
+    - userId (INT),
+    - totalPrice (Number),
+    - status (String ),
+    - created_at (timestamp)
 
 - user uchun register va login 
 - schema user 
