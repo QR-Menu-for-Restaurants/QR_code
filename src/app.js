@@ -7,6 +7,7 @@ import userRouter from "./routes/user.route.js";
 import qrRouter from "./routes/qrcode.route.js";
 import menuRouter from "./routes/menu.route.js";
 import { ErrorHandlerMiddleware } from "./middleware/error.handler.js";
+import foodRouter from "./routes/food.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

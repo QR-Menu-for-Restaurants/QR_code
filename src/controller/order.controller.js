@@ -1,4 +1,5 @@
 import { BaseException } from "../exceptions/base.exception.js";
+import foodModel from "../model/food.model.js";
 import orderModel from "../model/order.model.js";
 import userModel from "../model/user.model.js";
 import { isValidObjectId } from "mongoose";
@@ -17,9 +18,24 @@ const createOrder = async (req, res, next) => {
             throw new BaseException("User not found", 404);
         }
 
-        const totalPrice = foodItems.reduce((sum, item) => sum + (item.food.price * item.quantity), 0);
+        if (!Array.isArray(foodItems) || foodItems.length === 0) {
+            throw new BaseException("Food items required", 400);
+        }
+        let totalPrice = 0;
+        for (const item of foodItems) {
+            if (!isValidObjectId(item.foodId)) {
+                throw new BaseException("Invalid food id", 400);
+            }
 
-        const order = new orderModel({ userId, totalPrice,status: "pending" });
+            const food = await foodModel.findById(item.foodId);
+            if (!food) {
+                throw new BaseException(`Food not found for id: ${item.foodId}`, 404);
+            }
+
+            totalPrice += food.price * (item.quantity || 1);
+        }
+
+        const order = new orderModel({ userId, foodItems, totalPrice, status: "pending" });
         await order.save();
 
         res.status(201).send({
@@ -31,15 +47,14 @@ const createOrder = async (req, res, next) => {
     }
 };
 
+
 const getOrders = async (req, res, next) => {
     try {
-        const { userId } = req.params;
+        const orders = await orderModel
+            .find()
+            .populate("food.foodId")
+            .select("totalPrice status");
 
-        if (!isValidObjectId(userId)) {
-            throw new BaseException("Invalid user id", 400);
-        }
-
-        const orders = await orderModel.find({ userId }).populate("food.foodId");
         res.status(200).send({
             message: "Orders fetched successfully",
             data: orders
@@ -48,6 +63,7 @@ const getOrders = async (req, res, next) => {
         next(error);
     }
 };
+
 
 const getOrderById = async (req, res, next) => {
     try {
