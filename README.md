@@ -44,6 +44,13 @@
     - status (String ),
     - created_at (timestamp)
 
+5. order_items:
+    - orderId (INT),
+    - foodId (INT),
+    - quantity (INT),
+    - subTotal (INT)
+
 - user uchun register va login 
 - schema user 
 - user model uchun rol yoziladi
+- order va order_items qo'shildi
