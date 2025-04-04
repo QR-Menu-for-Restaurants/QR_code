@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +7,6 @@
     <link rel="stylesheet" href="/css/menu.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
-
 <body>
     <header>
         <div class="header">
@@ -19,34 +17,77 @@
             </div>
         </div>
     </header>
+    
     <main>
-        <% categories.forEach(category=> { %>
-            <h2>Category: <%= category.name %>
-            </h2>
+        <% categories.forEach(category => { %>
+            <h2>Category: <%= category.name %></h2>
             <div class="foods">
-                <% category.foods.forEach(food=> { %>
+                <% category.foods.forEach(food => { %>
                     <div class="food-item">
                         <img src="<%= food.imageUrl %>" alt="<%= food.name %>">
                         <div class="food-info">
-                            <h3>
-                                <%= food.name %>
-                            </h3>
-                            <p>
-                                <%= food.description %>
-                            </p>
-                            <p class="price">$<%= food.price %>
-                            </p>
+                            <h3><%= food.name %></h3>
+                            <p><%= food.description %></p>
+                            <p class="price">$<%= food.price %></p>
                         </div>
+                      
                         <div class="icons">
                             <i class="bx bx-heart like-icon"></i>
-                            <i class="bx bx-cart-add cart-icon"></i>
+                            <div class="order-container">
+                                <button class="order-btn">
+                                    <i class="bx bx-cart"></i>
+                                </button>
+                                
+                                <div class="order-modal" id="orderModal">
+                                    <p>Nechta buyurtma berasiz?</p>
+                                    <div class="quantity">
+                                        <button class="btn minus-btn"><i class="bx bx-minus"></i></button>
+                                        <span class="count">1</span>
+                                        <button class="btn plus-btn"><i class="bx bx-plus"></i></button>
+                                    </div>
+                                    <button class="confirm-btn">Tasdiqlash</button>
+                                </div>
+                            </div>
+                            
+                            
                         </div>
                     </div>
-                    <% }) %>
+                <% }); %>
             </div>
-            <% }) %>
+        <% }); %>
+
+        <div class="order-summary">
+            <button id="orderBtn">Buyurtma berish</button>
+            <div id="orderDetails" style="display: none;">
+                <span class="close-btn" id="closeBtn">&times;</span>
+                <h3>Your Order:</h3>
+                <table id="orderTable">
+                    <thead>
+                        <tr>
+                            <th>Food</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderList"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right; font-weight: bold;">Total Price:</td>
+                            <td id="totalPrice">$0.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <button id="payBtn">
+                    <a href="https://click.uz/uz/express-payment" target="_blank">To'lash</a>
+                </button>
+            </div>
+        </div>
+        
+        
     </main>
+    
+    
     <script src="/js/menu.js"></script>
 </body>
-
 </html>
