@@ -11,9 +11,33 @@ const adminRouter = Router();
 
 // adminRouter.get("/", adminController.getAllFoods);
 
-adminRouter.post("/foods", ProtectedMiddleware(true),RolesMiddleware(["admin"]),upload.single("imageUrl"),ValidationMiddleware(createFoodSchema),adminController.addFood);
-adminRouter.delete("/foods/delete/:id",ProtectedMiddleware(true),RolesMiddleware(["admin"]), adminController.deleteFood);
-adminRouter.post("/foods/update/:id",ProtectedMiddleware(true),RolesMiddleware(["admin"]),upload.single("imageUrl"),ValidationMiddleware(updateFoodSchema), adminController.updateFood);
-adminRouter.get("/admin/categories/:id",ProtectedMiddleware(true),RolesMiddleware(["admin"]),categoryController.getCategoryById);
+adminRouter.post(
+  "/foods",
+  ProtectedMiddleware(true),
+  RolesMiddleware(["admin"]),
+  upload.single("imageUrl"),
+  ValidationMiddleware(createFoodSchema),
+  adminController.addFood
+);
+adminRouter.delete(
+  "/foods/delete/:id",
+  ProtectedMiddleware(true),
+  RolesMiddleware(["admin"]),
+  adminController.deleteFood
+);
+adminRouter.post(
+  "/foods/update/:id",
+  ProtectedMiddleware(true),
+  RolesMiddleware(["admin"]),
+  upload.single("imageUrl"),
+  ValidationMiddleware(updateFoodSchema),
+  adminController.updateFood
+);
+adminRouter.get(
+  "/admin/categories/:id",
+  ProtectedMiddleware(true),
+  RolesMiddleware(["admin"]),
+  categoryController.getCategoryById
+);
 
 export default adminRouter;
