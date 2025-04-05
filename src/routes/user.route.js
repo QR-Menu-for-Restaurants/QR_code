@@ -22,8 +22,8 @@ userRouter.get("/login", (req, res) => {
 
 
 userRouter
-    .post('/register', ValidationMiddleware(registerSchema), userController.registerUser)
-    .post('/login', ValidationMiddleware(loginSchema), userController.loginUser)
+    .post('/register', ValidationMiddleware(registerSchema),RolesMiddleware(ROLES.ALL), userController.registerUser)
+    .post('/login', ValidationMiddleware(loginSchema),RolesMiddleware(ROLES.ALL), userController.loginUser)
     .get("/all",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),userController.getAllUsers)
     .post("/",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),userController.createUser)
     .put("/:id",ProtectedMiddleware(false),userController.updateUser)

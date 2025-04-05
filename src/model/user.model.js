@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ROLES } from "../constants/role.contant.js";
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -18,8 +19,8 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: mongoose.SchemaTypes.String,
-        enum: ["admin", "user","owner"],
-        default: "user"
+        enum: [ROLES.ADMIN, ROLES.USER,ROLES.OWNER],
+        default: ROLES.USER
     },
     tokens: {
         accessToken: {
