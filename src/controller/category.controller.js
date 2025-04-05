@@ -65,15 +65,40 @@ const updateCategory = async (req, res, next) => {
       throw new BaseException("Category name is required", 400);
     }
 
-    const imageUrl = req.file ? "/uploads/" + req.file.filename : undefined;
-    const updateData = imageUrl ? { name, imageUrl } : { name };
+    const updateData = { name };
 
     const category = await categoryModel.findByIdAndUpdate(id, updateData, { new: true });
+
+    if (!category) {
+      throw new BaseException("Category not found", 404);
+    }
+
     res.redirect("/categories");
   } catch (error) {
     next(error);
   }
 };
+
+const updateCategoryImageUrl = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    if (!isValidObjectId(id)) {
+      throw new BaseException("Invalid category ID", 404);
+    }
+
+    const imageUrl = req.file ? "/uploads/" + req.file.filename : "";
+    const updatedCategory = await categoryModel.findByIdAndUpdate(id, { imageUrl }, { new: true });
+
+    if (!updatedCategory) {
+      throw new BaseException("Category not found", 404);
+    }
+
+    res.redirect("/categories");
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 const deleteCategory = async (req, res, next) => {
   try {
@@ -98,5 +123,6 @@ export default {
   getCategoryById,
   createCategory,
   updateCategory,
+  updateCategoryImageUrl,
   deleteCategory,
 };

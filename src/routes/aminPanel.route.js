@@ -14,7 +14,8 @@ const adminRouter = Router();
 
 adminRouter.post("/foods", ProtectedMiddleware(true),RolesMiddleware(ROLES.OWNER,ROLES.ADMIN),upload.single("imageUrl"),ValidationMiddleware(createFoodSchema),adminController.addFood);
 adminRouter.delete("/foods/delete/:id",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER), adminController.deleteFood);
-adminRouter.post("/foods/update/:id",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),upload.single("imageUrl"),ValidationMiddleware(updateFoodSchema), adminController.updateFood);
+adminRouter.post("/foods/update/:id",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),ValidationMiddleware(updateFoodSchema), adminController.updateFood);
+adminRouter.patch("/foods",ProtectedMiddleware(true),RolesMiddleware(ROLES.OWNER,ROLES.ADMIN),upload.single("imageUrl"),ValidationMiddleware(updateFoodSchema),adminController.updateFoodImageUrl)
 adminRouter.get("/admin/categories/:id",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),categoryController.getCategoryById);
 
 export default adminRouter;
