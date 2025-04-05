@@ -4,6 +4,7 @@ import { ValidationMiddleware } from "../middleware/validation.middleware.js"
 import { loginSchema, registerSchema } from "../Schema/user.schema.js"
 import { ProtectedMiddleware } from "../middleware/protected.middleware.js"
 import { RolesMiddleware } from "../middleware/roles.middleware.js"
+import { ROLES } from "../constants/role.contant.js"
 
 const userRouter = Router()
 
@@ -23,9 +24,9 @@ userRouter.get("/login", (req, res) => {
 userRouter
     .post('/register', ValidationMiddleware(registerSchema), userController.registerUser)
     .post('/login', ValidationMiddleware(loginSchema), userController.loginUser)
-    .get("/all",ProtectedMiddleware(true),RolesMiddleware(["admin"]),userController.getAllUsers)
-    .post("/",ProtectedMiddleware(true),RolesMiddleware(["admin","user"]),userController.createUser)
+    .get("/all",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),userController.getAllUsers)
+    .post("/",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),userController.createUser)
     .put("/:id",ProtectedMiddleware(false),userController.updateUser)
-    .delete("/:id",ProtectedMiddleware(true),RolesMiddleware(["admin"]),userController.deleteUser)
+    .delete("/:id",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),userController.deleteUser)
 
 export default userRouter

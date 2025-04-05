@@ -90,30 +90,25 @@ async function deleteFood(req, res) {
 
 const updateFood = async (req, res, next) => {
   try {
-
-    const { id } = req.params; 
+    const { id } = req.params;
     const { name, price, description } = req.body;
 
     if (!name || !price || !description) {
       throw new BaseException('name, price, and description are required', 400);
     }
+
     const food = await foodModel.findById(id);
     if (!food) {
       throw new BaseException('food not found', 404);
     }
 
-    const imageUrl = req.file ? "/uploads/" + req.file.filename : food.imageUrl;
-
-   
     food.name = name;
     food.price = price;
     food.description = description;
-    food.imageUrl = imageUrl;
 
     await food.save();
 
-    const updatedFood = await foodModel.findById(id);
-    const updatedCategory = await categoryModel.findById(food.category).populate('foods'); 
+    const updatedCategory = await categoryModel.findById(food.category).populate('foods');
     res.render('admin', { selectedCategory: updatedCategory });
 
   } catch (error) {
@@ -122,4 +117,31 @@ const updateFood = async (req, res, next) => {
   }
 };
 
-export default { getAllFoods, addFood, deleteFood, updateFood };
+
+const updateFoodImageUrl = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.file) {
+      throw new BaseException('image is not sent', 400);
+    }
+
+    const food = await foodModel.findById(id);
+    if (!food) {
+      throw new BaseException('food not found', 404);
+    }
+
+    food.imageUrl = "/uploads/" + req.file.filename;
+
+    await food.save();
+
+    const updatedCategory = await categoryModel.findById(food.category).populate('foods');
+    res.render('admin', { selectedCategory: updatedCategory });
+
+  } catch (error) {
+    console.error(error);
+    next(error); 
+  }
+};
+
+export default { getAllFoods, addFood, deleteFood, updateFood,updateFoodImageUrl };
