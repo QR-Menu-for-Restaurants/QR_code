@@ -154,6 +154,15 @@ const loginUser = async (req, res, next) => {
       REFRESH_TOKEN_SECRET,
       { expiresIn: REFRESH_TOKEN_EXPIRE_TIME }
     );
+    res.cookie("accessToken", accessToken, {
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true
+    });
 
     res.redirect("/categories");
   } catch (error) {

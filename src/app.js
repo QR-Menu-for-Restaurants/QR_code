@@ -7,7 +7,7 @@ import userRouter from "./routes/user.route.js";
 import qrRouter from "./routes/qrcode.route.js";
 import menuRouter from "./routes/menu.route.js";
 import { ErrorHandlerMiddleware } from "./middleware/error.handler.js";
-import foodRouter from "./routes/food.routes.js";
+import coockieParser from "cookie-parser"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,6 +20,8 @@ app.use(express.urlencoded({ extended: true }))
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(coockieParser())
 
 app.use("/", qrRouter);
 app.use("/",router)
