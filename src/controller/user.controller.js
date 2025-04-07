@@ -12,6 +12,7 @@ import {
 } from "../config/jwt.config.js";
 import { sendMail } from "../utils/mail.utils.js";
 import { PORT } from "../config/app.config.js";
+import crypto from "crypto"
 
 const registerUser = async (request, response, next) => {
   try {
@@ -247,6 +248,75 @@ const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+const forgotPassword=async (req,res,next) => {
+    try {
+      
+      const {email}=req.body
+      const user=await userModel.findOne({email})
+      
+      if (!user) {
+        return res.render("forgot-password",{
+          error:"user Not Found",
+          mess:null
+        })
+      }
+
+      const serverBaseUrl=`http://localhost:${PORT}`
+
+      const token=crypto.randomBytes(25);
+      user.token=token.toString("hex")
+
+      await user.save()
+
+      await sendMail({
+        to:email,
+        subject:"Reset password",
+        html:`
+          <h2>Click Button<h2>
+          <a href="${serverBaseUrl}/reset-password?token=${user.token}" style="background-color: green; color: white; padding:20px;border-radius:6px;">Reset Password</a>
+        `
+      });
+      res.render("forgot-password",{
+        mess:"Link send to Email",
+        error:null
+      })
+
+    } catch (error) {
+      next(error)
+    }
+}
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { password } = req.body;
+    const { token } = req.query;
+
+    if (!token) {
+      return res.redirect("/login");
+    }
+
+    const user = await userModel.findOne({ token });
+
+    if (!user) {
+      return res.redirect("/forgot-password");
+    }
+
+    const passwordHash = await hash(password, 10);
+
+    user.password = passwordHash;
+
+    await user.save();
+
+    res.render("reset-password", {
+      mess: "Password updated",
+      error: null,
+      token: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   registerUser,
   loginUser,
@@ -255,4 +325,6 @@ export default {
   updateUser,
   deleteUser,
   refreshUser,
+  forgotPassword,
+  resetPassword
 };

@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
             type: mongoose.SchemaTypes.String,
         },
     },
+    token: {
+        type: mongoose.SchemaTypes.String,
+        required: false,
+      },
 },{
     collection:"users",
     timestamps:true,

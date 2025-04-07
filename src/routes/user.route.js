@@ -26,6 +26,8 @@ userRouter
     .post('/login', ValidationMiddleware(loginSchema),RolesMiddleware(ROLES.ALL), userController.loginUser)
     .get("/all",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),userController.getAllUsers)
     .post("/",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),userController.createUser)
+    .post("/forgot-password",ProtectedMiddleware(false),RolesMiddleware(ROLES.ALL),userController.forgotPassword)
+    .post("/reset-password",ProtectedMiddleware(false),RolesMiddleware(ROLES.ALL),userController.resetPassword)
     .put("/:id",ProtectedMiddleware(false),userController.updateUser)
     .delete("/:id",ProtectedMiddleware(true),RolesMiddleware(ROLES.ADMIN,ROLES.OWNER),userController.deleteUser)
 
