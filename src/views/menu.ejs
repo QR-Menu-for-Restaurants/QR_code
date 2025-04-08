@@ -20,7 +20,15 @@
         </div>
       </div>
     </header>
-
+    <nav class="category-nav">
+      <ul>
+        <% categories.forEach(category => { %>
+        <li>
+          <a href="#<%= category.name.toLowerCase() %>"><%= category.name %></a>
+        </li>
+        <% }); %>
+      </ul>
+    </nav>
     <main>
       <% categories.forEach(category => { %>
       <h2>Category: <%= category.name %></h2>

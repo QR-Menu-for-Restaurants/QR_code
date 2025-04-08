@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const countElement = modal.querySelector(".count");
         const confirmBtn = modal.querySelector(".confirm-btn");
 
-        let count = 1;
+        let count = 0;
 
         orderBtn.addEventListener("click", function () {
             modal.classList.add("active");
@@ -90,3 +90,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+window.addEventListener("scroll", function () {
+    const nav = document.querySelector(".category-nav");
+    const headerHeight = document.querySelector(".header").offsetHeight;
+  
+    if (window.scrollY > headerHeight) {
+      nav.classList.add("sticky"); 
+    } else {
+      nav.classList.remove("sticky");
+    }
+  });
+  

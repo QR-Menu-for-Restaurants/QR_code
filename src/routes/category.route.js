@@ -26,6 +26,7 @@ categoryRouter.get(
   categoryController.getCategoryById
 );
 
+// Category yaratish
 categoryRouter.post(
   "/",
   ProtectedMiddleware(true),
@@ -35,6 +36,7 @@ categoryRouter.post(
   categoryController.createCategory
 );
 
+// Categoryni yangilash (ID orqali)
 categoryRouter.post(
   "/update/:id",
   ProtectedMiddleware(true),
@@ -44,16 +46,9 @@ categoryRouter.post(
   categoryController.updateCategory
 );
 
-categoryRouter.post(
-  "/update/:id",
-  ProtectedMiddleware(true),
-  RolesMiddleware([ROLES.ADMIN, ROLES.OWNER]),
-  ValidationMiddleware(updateCategorySchema),
-  categoryController.updateCategory
-);
-
+// Categoryni faqat rasmni yangilash
 categoryRouter.patch(
-  "/",
+  "/update/image/:id",
   ProtectedMiddleware(true),
   RolesMiddleware([ROLES.ADMIN, ROLES.OWNER]),
   upload.single("image"),
@@ -61,6 +56,7 @@ categoryRouter.patch(
   categoryController.updateCategoryImageUrl
 );
 
+// Categoryni o'chirish
 categoryRouter.delete(
   "/:id",
   ProtectedMiddleware(true),

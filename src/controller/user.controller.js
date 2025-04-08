@@ -1,19 +1,19 @@
-import { hash } from "bcrypt";
-import { compare } from "bcrypt";
+import { hash, compare } from "bcrypt";
 import { isValidObjectId } from "mongoose";
 import userModel from "../model/user.model.js";
 import { BaseException } from "../exceptions/base.exception.js";
 import jwt from "jsonwebtoken";
 import {
   ACCESS_TOKEN_SECRET,
-  ACCES_TOKEN_EXPIRE_TIME,
+  ACCESS_TOKEN_EXPIRE_TIME,
   REFRESH_TOKEN_SECRET,
   REFRESH_TOKEN_EXPIRE_TIME,
 } from "../config/jwt.config.js";
 import { sendMail } from "../utils/mail.utils.js";
 import { PORT } from "../config/app.config.js";
-import crypto from "crypto"
+import crypto from "crypto";
 
+// Register
 const registerUser = async (request, response, next) => {
   try {
     const { name, email, password } = request.body;
@@ -24,7 +24,7 @@ const registerUser = async (request, response, next) => {
 
     const foundedUser = await userModel.findOne({ email });
     if (foundedUser) {
-      throw new BaseException("user already exists", 409);
+      throw new BaseException("User already exists", 409);
     }
 
     const hashedPassword = await hash(password, 10);
@@ -34,33 +34,31 @@ const registerUser = async (request, response, next) => {
       email,
       password: hashedPassword,
     });
+
     const htmlContent = `
-  <div style="max-width: 600px; margin: auto; padding: 30px; font-family: Arial, sans-serif; background: #f9f9f9; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
-    <div style="text-align: center;">
-      <h2 style="color: #333;">👋 Salom, ${name}!</h2>
-      <p style="font-size: 16px; color: #555;">
-        Siz bizning <strong>Restoran</strong> xizmatimizga muvaffaqiyatli ro'yxatdan o'tdingiz.
-      </p>
-    </div>
-
-    <div style="margin: 30px 0;">
-      <p style="font-size: 15px; color: #444;">
-        Endi siz menyuni ko‘rib chiqish, buyurtma berish va ko‘plab imtiyozlarga ega bo‘lishingiz mumkin!
-      </p>
-    </div>
-
-    <div style="text-align: center; margin-bottom: 30px;">
-      <a href="http://localhost:${PORT}/menu" style="background-color: #4CAF50; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; font-size: 16px;">
-        Menyuga o'tish
-      </a>
-    </div>
-
-    <div style="font-size: 13px; color: #888; text-align: center;">
-      <p>Agar bu email sizga bexosdan kelgan bo‘lsa, e’tiborsiz qoldiring.</p>
-      <p>&copy; 2025 Restoran Loyihasi</p>
-    </div>
-  </div>
-`;
+      <div style="max-width: 600px; margin: auto; padding: 30px; font-family: Arial, sans-serif; background: #f9f9f9; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+        <div style="text-align: center;">
+          <h2 style="color: #333;">👋 Salom, ${name}!</h2>
+          <p style="font-size: 16px; color: #555;">
+            Siz bizning <strong>Restoran</strong> xizmatimizga muvaffaqiyatli ro'yxatdan o'tdingiz.
+          </p>
+        </div>
+        <div style="margin: 30px 0;">
+          <p style="font-size: 15px; color: #444;">
+            Endi siz menyuni ko‘rib chiqish, buyurtma berish va ko‘plab imtiyozlarga ega bo‘lishingiz mumkin!
+          </p>
+        </div>
+        <div style="text-align: center; margin-bottom: 30px;">
+          <a href="http://localhost:${PORT}/menu" style="background-color: #4CAF50; color: white; text-decoration: none; padding: 12px 25px; border-radius: 5px; font-size: 16px;">
+            Menyuga o'tish
+          </a>
+        </div>
+        <div style="font-size: 13px; color: #888; text-align: center;">
+          <p>Agar bu email sizga bexosdan kelgan bo‘lsa, e’tiborsiz qoldiring.</p>
+          <p>&copy; 2025 Restoran Loyihasi</p>
+        </div>
+      </div>
+    `;
 
     await sendMail({
       to: email,
@@ -71,7 +69,7 @@ const registerUser = async (request, response, next) => {
     const accessToken = jwt.sign(
       { id: user.id, role: user.role },
       ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCES_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
+      { expiresIn: ACCESS_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
     );
 
     const refreshToken = jwt.sign(
@@ -80,19 +78,59 @@ const registerUser = async (request, response, next) => {
       { expiresIn: REFRESH_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
     );
 
-    user.tokens = {
-      accessToken,
-      refreshToken,
-    };
+    user.tokens = { accessToken, refreshToken };
 
     await user.save();
-
     response.redirect("/categories");
   } catch (error) {
     next(error);
   }
 };
 
+// Login
+const loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      throw new BaseException("User not found", 404);
+    }
+
+    const isMatch = await compare(password, user.password);
+    if (!isMatch) {
+      throw new BaseException("Invalid password", 401);
+    }
+
+    const accessToken = jwt.sign(
+      { id: user.id, role: user.role },
+      ACCESS_TOKEN_SECRET,
+      { expiresIn: ACCESS_TOKEN_EXPIRE_TIME }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: user.id, role: user.role },
+      REFRESH_TOKEN_SECRET,
+      { expiresIn: REFRESH_TOKEN_EXPIRE_TIME }
+    );
+
+    res.cookie("accessToken", accessToken, {
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
+    res.redirect("/categories");
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Refresh
 const refreshUser = async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
@@ -106,7 +144,7 @@ const refreshUser = async (req, res, next) => {
     const newAccessToken = jwt.sign(
       { id: data.id, role: data.role },
       ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCES_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
+      { expiresIn: ACCESS_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
     );
 
     const newRefreshToken = jwt.sign(
@@ -131,46 +169,7 @@ const refreshUser = async (req, res, next) => {
   }
 };
 
-const loginUser = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const user = await userModel.findOne({ email });
-
-    if (!user) {
-      throw new BaseException("User not found", 404);
-    }
-
-    const isMatch = await compare(password, user.password);
-    if (!isMatch) {
-      throw new BaseException("Invalid password", 401);
-    }
-
-    const accessToken = jwt.sign(
-      { id: user.id, role: user.role },
-      ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCES_TOKEN_EXPIRE_TIME }
-    );
-    const refreshToken = jwt.sign(
-      { id: user.id, role: user.role },
-      REFRESH_TOKEN_SECRET,
-      { expiresIn: REFRESH_TOKEN_EXPIRE_TIME }
-    );
-    res.cookie("accessToken", accessToken, {
-      maxAge: 60 * 60 * 1000,
-      httpOnly: true,
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true
-    });
-
-    res.redirect("/categories");
-  } catch (error) {
-    next(error);
-  }
-};
-
+// CRUD
 const getAllUsers = async (req, res) => {
   try {
     const users = await userModel.find();
@@ -184,22 +183,23 @@ const getAllUsers = async (req, res) => {
     });
   }
 };
+
 const createUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
+
     if (!(name && email && password)) {
       throw new BaseException("name , email and password are required!", 400);
     }
+
     const foundUser = await userModel.findOne({ email });
     if (foundUser) {
-      throw new BaseException("user already exists", 409);
+      throw new BaseException("User already exists", 409);
     }
-    const user = new userModel({
-      name,
-      email,
-      password,
-    });
+
+    const user = new userModel({ name, email, password });
     await user.save();
+
     res.status(201).send({
       message: "success",
       data: user,
@@ -208,26 +208,27 @@ const createUser = async (req, res, next) => {
     next(error);
   }
 };
+
 const updateUser = async (req, res, next) => {
   try {
     const id = req.params.id;
+
     if (!isValidObjectId(id)) {
-      throw new BaseException("invalid id", 400);
+      throw new BaseException("Invalid id", 400);
     }
+
     const { name, email, password } = req.body;
+
     if (!(name && email && password)) {
-      throw new BaseException("email,password and name are not given", 400);
+      throw new BaseException("Email, password, and name are required", 400);
     }
 
     const user = await userModel.findByIdAndUpdate(
       id,
-      {
-        name,
-        email,
-        password,
-      },
+      { name, email, password },
       { new: true, runValidators: true }
     );
+
     return res.status(200).send({
       message: "success",
       data: user,
@@ -236,56 +237,60 @@ const updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
 const deleteUser = async (req, res, next) => {
   try {
     const id = req.params.id;
+
     if (!isValidObjectId(id)) {
-      throw new BaseException("invalid id", 400);
+      throw new BaseException("Invalid id", 400);
     }
+
     await userModel.findByIdAndDelete(id);
     return res.status(204).send();
   } catch (error) {
     next(error);
   }
 };
-const forgotPassword=async (req,res,next) => {
-    try {
-      
-      const {email}=req.body
-      const user=await userModel.findOne({email})
-      
-      if (!user) {
-        return res.render("forgot-password",{
-          error:"user Not Found",
-          mess:null
-        })
-      }
 
-      const serverBaseUrl=`http://localhost:${PORT}`
+// Forgot Password
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await userModel.findOne({ email });
 
-      const token=crypto.randomBytes(25);
-      user.token=token.toString("hex")
-
-      await user.save()
-
-      await sendMail({
-        to:email,
-        subject:"Reset password",
-        html:`
-          <h2>Click Button<h2>
-          <a href="${serverBaseUrl}/reset-password?token=${user.token}" style="background-color: green; color: white; padding:20px;border-radius:6px;">Reset Password</a>
-        `
+    if (!user) {
+      return res.render("forgot-password", {
+        error: "User not found",
+        mess: null,
       });
-      res.render("forgot-password",{
-        mess:"Link send to Email",
-        error:null
-      })
-
-    } catch (error) {
-      next(error)
     }
-}
 
+    const serverBaseUrl = `http://localhost:${PORT}`;
+    const token = crypto.randomBytes(25);
+    user.token = token.toString("hex");
+
+    await user.save();
+
+    await sendMail({
+      to: email,
+      subject: "Reset password",
+      html: `
+        <h2>Click Button</h2>
+        <a href="${serverBaseUrl}/reset-password?token=${user.token}" style="background-color: green; color: white; padding:20px;border-radius:6px;">Reset Password</a>
+      `,
+    });
+
+    res.render("forgot-password", {
+      mess: "Link sent to email",
+      error: null,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Reset Password
 const resetPassword = async (req, res, next) => {
   try {
     const { password } = req.body;
@@ -304,7 +309,6 @@ const resetPassword = async (req, res, next) => {
     const passwordHash = await hash(password, 10);
 
     user.password = passwordHash;
-
     await user.save();
 
     res.render("reset-password", {
@@ -326,5 +330,5 @@ export default {
   deleteUser,
   refreshUser,
   forgotPassword,
-  resetPassword
+  resetPassword,
 };

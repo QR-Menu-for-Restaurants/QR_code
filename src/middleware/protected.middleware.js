@@ -8,7 +8,7 @@ export const ProtectedMiddleware = (isProtected) => {
       request.role = "user";
       return next();
     }
-    const token = request.cookies["accessToken"];  
+    const token = request.cookies["accessToken"];
 
     if (!token) {
       throw new BaseException("No token provided", 401);
@@ -25,7 +25,9 @@ export const ProtectedMiddleware = (isProtected) => {
       } else if (error instanceof jwt.JsonWebTokenError) {
         return next(new BaseException("Invalid token", 401));
       } else if (error instanceof jwt.NotBeforeError) {
-        return next(new BaseException("Token not valid before expiration", 401));
+        return next(
+          new BaseException("Token not valid before expiration", 401)
+        );
       } else {
         next(error);
       }
