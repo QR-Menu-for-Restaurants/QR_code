@@ -6,7 +6,7 @@ import { BaseException } from "../exceptions/base.exception.js";
 import jwt from "jsonwebtoken";
 import {
   ACCESS_TOKEN_SECRET,
-  ACCES_TOKEN_EXPIRE_TIME,
+  ACCESS_TOKEN_EXPIRE_TIME,
   REFRESH_TOKEN_SECRET,
   REFRESH_TOKEN_EXPIRE_TIME,
 } from "../config/jwt.config.js";
@@ -71,7 +71,7 @@ const registerUser = async (request, response, next) => {
     const accessToken = jwt.sign(
       { id: user.id, role: user.role },
       ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCES_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
+      { expiresIn: ACCESS_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
     );
 
     const refreshToken = jwt.sign(
@@ -106,7 +106,7 @@ const refreshUser = async (req, res, next) => {
     const newAccessToken = jwt.sign(
       { id: data.id, role: data.role },
       ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCES_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
+      { expiresIn: ACCESS_TOKEN_EXPIRE_TIME, algorithm: "HS256" }
     );
 
     const newRefreshToken = jwt.sign(
@@ -148,7 +148,7 @@ const loginUser = async (req, res, next) => {
     const accessToken = jwt.sign(
       { id: user.id, role: user.role },
       ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCES_TOKEN_EXPIRE_TIME }
+      { expiresIn: ACCESS_TOKEN_EXPIRE_TIME }
     );
     const refreshToken = jwt.sign(
       { id: user.id, role: user.role },
