@@ -169,7 +169,50 @@ const refreshUser = async (req, res, next) => {
   }
 };
 
+<<<<<<< HEAD
 // CRUD
+=======
+const loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      throw new BaseException("User not found", 404);
+    }
+
+    const isMatch = await compare(password, user.password);
+    if (!isMatch) {
+      throw new BaseException("Invalid password", 401);
+    }
+
+    const accessToken = jwt.sign(
+      { id: user.id, role: user.role },
+      ACCESS_TOKEN_SECRET,
+      { expiresIn: ACCESS_TOKEN_EXPIRE_TIME }
+    );
+    const refreshToken = jwt.sign(
+      { id: user.id, role: user.role },
+      REFRESH_TOKEN_SECRET,
+      { expiresIn: REFRESH_TOKEN_EXPIRE_TIME }
+    );
+    res.cookie("accessToken", accessToken, {
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true
+    });
+
+    res.redirect("/categories");
+  } catch (error) {
+    next(error);
+  }
+};
+
+>>>>>>> ec04ad2dfec6e5f47713dfc845ab4a2c3e5b6b94
 const getAllUsers = async (req, res) => {
   try {
     const users = await userModel.find();

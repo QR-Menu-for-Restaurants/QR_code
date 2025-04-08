@@ -6,6 +6,7 @@ import adminRouter from "./aminPanel.route.js";
 import orderRouter from "./order.route.js";
 import orderItemRouter from "./order.item.route.js";
 import pageRouter from "./page.route.js";
+import reviewRouter from "./review.route.js";
 
 const router = Router()
 router.use("/users",userRouter)
@@ -14,5 +15,6 @@ router.use("/foods",adminRouter)
 router.use("/orders",orderRouter)
 router.use("/order-items",orderItemRouter)
 router.use("/",pageRouter)
+router.use("/reviews",reviewRouter)
 
 export default router

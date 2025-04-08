@@ -47,8 +47,9 @@ const addFood = async (req, res, next) => {
     }
 
     const imageUrl = "/uploads/" + req.file.filename;
-
+    
     const newFood = new foodModel({ name, price, description, category, imageUrl });
+
     await newFood.save();
 
     await categoryModel.updateOne(
