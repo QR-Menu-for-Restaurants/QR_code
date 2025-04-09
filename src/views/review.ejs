@@ -52,7 +52,7 @@
 </head>
 <body>
     <h2>📝 Yangi Review Qo'shish</h2>
-    <form action="/reviews" method="POST">
+    <form action="/reviews/create" method="POST">
         <label for="user">Foydalanuvchi:</label>
         <select id="user" name="user" required>
             <% users.forEach(u => { %>
@@ -63,7 +63,7 @@
         <label for="food">Taom:</label>
         <select id="food" name="food" required>
             <% foods.forEach(f => { %>
-                <option value="<%= f._id %>"><%= f.title %></option>
+                <option value="<%= f._id %>"><%= f.name %></option>
             <% }); %>
         </select>
 

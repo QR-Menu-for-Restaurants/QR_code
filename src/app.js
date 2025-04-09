@@ -9,11 +9,14 @@ import menuRouter from "./routes/menu.route.js";
 import reviewRouter from "./routes/review.route.js";
 import { ErrorHandlerMiddleware } from "./middleware/error.handler.js";
 import cookieParser from "cookie-parser"; 
+import methodOverride from "method-override"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+app.use(methodOverride("_method"))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,7 +32,7 @@ app.use("/", router);
 app.use("/", adminRouter);
 app.use("/", userRouter);
 app.use("/", menuRouter);
-app.use("/", reviewRouter);
+app.use("/reviews", reviewRouter);
 app.use(ErrorHandlerMiddleware);
 
 export default app;

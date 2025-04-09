@@ -38,10 +38,10 @@ const createCategory = async (req, res, next) => {
       throw new BaseException("Category name is required", 400);
     }
 
-    const existingCategory = await categoryModel.findOne({ name });
-    if (existingCategory) {
-      throw new BaseException("Category already exists", 409);
-    }
+    // const existingCategory = await categoryModel.findOne({ name });
+    // if (existingCategory) {
+    //   throw new BaseException("Category already exists", 409);
+    // }
 
     const imageUrl = req.file ? "/uploads/" + req.file.filename : "";
     const newCategory = new categoryModel({ name, imageUrl });
