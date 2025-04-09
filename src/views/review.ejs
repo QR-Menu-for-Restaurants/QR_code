@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviewlar boshqaruvi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: #f8f8f8;
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        hr {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h2>📝 Yangi Review Qo'shish</h2>
+    <form action="/reviews" method="POST">
+        <label for="user">Foydalanuvchi:</label>
+        <select id="user" name="user" required>
+            <% users.forEach(u => { %>
+                <option value="<%= u._id %>"><%= u.name %></option>
+            <% }); %>
+        </select>
+
+        <label for="food">Taom:</label>
+        <select id="food" name="food" required>
+            <% foods.forEach(f => { %>
+                <option value="<%= f._id %>"><%= f.title %></option>
+            <% }); %>
+        </select>
+
+        <label for="rating">Rating (1-5):</label>
+        <input type="number" id="rating" name="rating" min="1" max="5" required>
+
+        <label for="comment">Izoh:</label>
+        <textarea id="comment" name="comment" rows="4" required></textarea>
+
+        <button type="submit">Yuborish</button>
+    </form>
+    
+    <hr>
+
+    <a href="/reviews">📋 Barcha Reviewlar</a><br>
+    <a href="/">🏠 Bosh sahifa</a>
+
+    <hr>
+</body>
+</html>
