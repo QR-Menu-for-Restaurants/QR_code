@@ -12,7 +12,7 @@ export const RolesMiddleware = (...roles) => {
       throw new BaseException("Role not provided", 401);
     }
   
-    if (roles.includes(userRole)) {
+    if (!roles.includes(userRole)) {
       throw new BaseException("Unauthorized access", 403);
     }
     next();
