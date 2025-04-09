@@ -1,6 +1,6 @@
-import { ACCESS_TOKEN_SECRET } from "../config/jwt.config.js";
-import { BaseException } from "../exceptions/base.exception.js";
 import jwt from "jsonwebtoken";
+import { BaseException } from "../exceptions/base.exception.js";
+import { ACCESS_TOKEN_SECRET } from "../config/jwt.config.js";
 
 export const ProtectedMiddleware = (isProtected) => {
   return (request, _, next) => {
@@ -8,7 +8,13 @@ export const ProtectedMiddleware = (isProtected) => {
       request.role = "user";
       return next();
     }
+<<<<<<< HEAD
     const token = request.cookies["accessToken"];  
+=======
+
+    const token = request.cookies["accessToken"];
+    console.log("Token:", token);  // Tokenni tekshirish
+>>>>>>> dev
 
     if (!token) {
       throw new BaseException("No token provided", 401);

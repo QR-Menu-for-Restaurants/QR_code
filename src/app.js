@@ -6,6 +6,7 @@ import router from "./routes/index.js";
 import userRouter from "./routes/user.route.js";
 import qrRouter from "./routes/qrcode.route.js";
 import menuRouter from "./routes/menu.route.js";
+import reviewRouter from "./routes/review.route.js";
 import { ErrorHandlerMiddleware } from "./middleware/error.handler.js";
 import cookieParser from "cookie-parser"; 
 
@@ -28,6 +29,7 @@ app.use("/", router);
 app.use("/", adminRouter);
 app.use("/", userRouter);
 app.use("/", menuRouter);
+app.use("/", reviewRouter);
 app.use(ErrorHandlerMiddleware);
 
 export default app;
