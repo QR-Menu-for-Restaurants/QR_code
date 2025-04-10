@@ -168,10 +168,6 @@ const refreshUser = async (req, res, next) => {
 };
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
 const getAllUsers = async (req, res) => {
   try {
     const users = await userModel.find();

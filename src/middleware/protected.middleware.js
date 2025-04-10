@@ -8,13 +8,9 @@ export const ProtectedMiddleware = (isProtected) => {
       request.role = "user";
       return next();
     }
-<<<<<<< HEAD
-    const token = request.cookies["accessToken"];  
-=======
 
     const token = request.cookies["accessToken"];
     console.log("Token:", token);  // Tokenni tekshirish
->>>>>>> dev
 
     if (!token) {
       throw new BaseException("No token provided", 401);
