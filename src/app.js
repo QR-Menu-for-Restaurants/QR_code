@@ -10,6 +10,7 @@ import reviewRouter from "./routes/review.route.js";
 import { ErrorHandlerMiddleware } from "./middleware/error.handler.js";
 import cookieParser from "cookie-parser"; 
 import methodOverride from "method-override"
+import morgan from "morgan";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +18,11 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(methodOverride("_method"))
+
+if(process.env.NODE_ENV?.trim() === "development"){
+    app.use(morgan("tiny"));
+    
+  }
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

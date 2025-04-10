@@ -8,7 +8,6 @@ import mongoose from "mongoose";
 export const createReview = async (req, res, next) => {
     try {
         const { user, food, rating, comment } = req.body;
-        console.log(req.body);
         
         if (!user || !food || !rating || !comment) {
             throw new BaseException("All fields are required", 400);

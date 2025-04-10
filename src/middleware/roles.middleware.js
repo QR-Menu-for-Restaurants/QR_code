@@ -4,7 +4,6 @@ import { BaseException } from "../exceptions/base.exception.js";
 export const RolesMiddleware = (...roles) => {
   return (req, res, next) => {
     const userRole = req.role;
-    console.log("1", userRole);
 
     if (roles.includes(ROLES.ALL)) {
       return next();
