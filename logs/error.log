@@ -4,3 +4,5 @@
 {"level":"error","message":"Unauthorized access","timestamp":"2025-04-10 13:20:19"}
 {"level":"error","message":"Invalid password","timestamp":"2025-04-10 13:25:30"}
 {"level":"error","message":"E11000 duplicate key error collection: food.users index: email_1 dup key: { email: \"dada@gmail.com\" }","timestamp":"2025-04-10 15:02:46"}
+{"level":"error","message":"Invalid password","timestamp":"2025-04-10 15:16:41"}
+{"level":"error","message":"Invalid password","timestamp":"2025-04-10 15:16:50"}
