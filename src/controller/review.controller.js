@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 export const createReview = async (req, res, next) => {
     try {
         const { user, food, rating, comment } = req.body;
-
+        
         if (!user || !food || !rating || !comment) {
             throw new BaseException("All fields are required", 400);
         };
@@ -32,7 +32,9 @@ export const createReview = async (req, res, next) => {
             comment
         });
         await newReview.save();
-        res.render(`review`); // Redirect to food's review page
+
+        
+        res.redirect(`/reviews`); // Redirect to food's review page
     } catch (error) {
         next(error);
     }

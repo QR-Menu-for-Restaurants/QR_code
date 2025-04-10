@@ -4,8 +4,7 @@ import { BaseException } from "../exceptions/base.exception.js";
 export const RolesMiddleware = (...roles) => {
   return (req, res, next) => {
     const userRole = req.role;
-    console.log("1",userRole);
-    
+
     if (roles.includes(ROLES.ALL)) {
       return next();
     }
@@ -14,9 +13,16 @@ export const RolesMiddleware = (...roles) => {
       throw new BaseException("Role not provided", 401);
     }
 
+<<<<<<< HEAD
     if (roles.includes(userRole)) {
       throw new BaseException("Unauthorized access", 403);
+=======
+    if (!roles.includes(userRole)) {
+      if (roles.includes(userRole)) {
+        throw new BaseException("Unauthorized access", 403);
+      }
+      next();
+>>>>>>> khushnud
     }
-    next();
   };
 };

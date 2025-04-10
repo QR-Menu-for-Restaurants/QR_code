@@ -5,18 +5,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const orderDetails = document.getElementById("orderDetails");
     const orderList = document.getElementById("orderList");
     const totalPriceElement = document.getElementById("totalPrice");
+    const closeBtn = document.getElementById("closeBtn");
 
     let orderItems = [];
     let totalPrice = 0;
 
-    document.getElementById('orderBtn').addEventListener('click', function() {
-        document.getElementById('orderDetails').style.display = 'block';
-    });
-    
-    document.getElementById('closeBtn').addEventListener('click', function() {
-        document.getElementById('orderDetails').style.display = 'none';
-    });
-
+    // Buyurtma oynasini ochish
     orderBtn.addEventListener("click", function () {
         if (orderItems.length > 0) {
             orderDetails.style.display = "block";
@@ -26,11 +20,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Buyurtma oynasini yopish
+    closeBtn.addEventListener("click", function () {
+        orderDetails.style.display = "none";
+    });
+
+    // Buyurtmaga qo‘shish funksiyasi
     function addToOrder(foodName, price, count) {
         orderItems.push({ name: foodName, price: price, count: count });
         totalPrice += price * count;
     }
 
+    // Buyurtmalar ro‘yxatini chiqarish
     function renderOrderDetails() {
         orderList.innerHTML = '';
         orderItems.forEach(item => {
@@ -43,23 +44,34 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
             orderList.appendChild(row);
         });
-
         totalPriceElement.textContent = `$${totalPrice.toFixed(2)}`;
     }
 
-    orderBtns.forEach((orderBtn, index) => {
+    // Har bir taom uchun modal va hisoblashlar
+    orderBtns.forEach((btn, index) => {
         const modal = orderModals[index];
         const minusBtn = modal.querySelector(".minus-btn");
         const plusBtn = modal.querySelector(".plus-btn");
         const countElement = modal.querySelector(".count");
         const confirmBtn = modal.querySelector(".confirm-btn");
 
-        let count = 0;
+        let count = 1;
+        countElement.textContent = count;
 
-        orderBtn.addEventListener("click", function () {
+        // Modal ochilishi
+        btn.addEventListener("click", function () {
+            count = 1;
+            countElement.textContent = count;
             modal.classList.add("active");
         });
 
+        // + bosilganda
+        plusBtn.addEventListener("click", function () {
+            count++;
+            countElement.textContent = count;
+        });
+
+        // - bosilganda
         minusBtn.addEventListener("click", function () {
             if (count > 1) {
                 count--;
@@ -67,21 +79,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        plusBtn.addEventListener("click", function () {
-            count++;
-            countElement.textContent = count;
-        });
-
+        // Tasdiqlash tugmasi
         confirmBtn.addEventListener("click", function () {
             modal.classList.remove("active");
 
-            const foodName = modal.closest('.food-item').querySelector('.food-info h3').textContent;
-            const price = parseFloat(modal.closest('.food-item').querySelector('.food-info .price').textContent.replace('$', ''));
+            const foodCard = modal.closest('.food-item');
+            const foodName = foodCard.querySelector('.food-info h3').textContent;
+            const price = parseFloat(foodCard.querySelector('.food-info .price').textContent.replace('$', ''));
 
             addToOrder(foodName, price, count);
         });
     });
 
+    // Modal tashqarisiga bosilganda yopish
     window.addEventListener("click", function (event) {
         orderModals.forEach(modal => {
             if (event.target === modal) {
@@ -90,14 +100,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+// Scrollda nav sticky bo‘lishi
 window.addEventListener("scroll", function () {
     const nav = document.querySelector(".category-nav");
-    const headerHeight = document.querySelector(".header").offsetHeight;
-  
+    const header = document.querySelector(".header");
+    const headerHeight = header ? header.offsetHeight : 0;
+
     if (window.scrollY > headerHeight) {
-      nav.classList.add("sticky"); 
+        nav.classList.add("sticky");
     } else {
-      nav.classList.remove("sticky");
+        nav.classList.remove("sticky");
     }
-  });
-  
+});

@@ -10,7 +10,10 @@ export const ProtectedMiddleware = (isProtected) => {
     }
 
     const token = request.cookies["accessToken"];
+<<<<<<< HEAD
     console.log("Token:", token);  // Tokenni tekshirish
+=======
+>>>>>>> khushnud
 
     if (!token) {
       throw new BaseException("No token provided", 401);

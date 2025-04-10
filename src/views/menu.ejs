@@ -12,14 +12,24 @@
   </head>
   <body>
     <header>
-      <div class="header">
-        <div class="logo">Menu</div>
-        <div class="register">
-          <button><a href="/login">Login</a></button>
-          <button><a href="/register">Signup</a></button>
+      <div class="menu-section">
+        <div class="video-wrapper">
+          <video autoplay muted loop>
+            <source src="https://videos.pexels.com/video-files/3298718/3298718-sd_960_506_25fps.mp4" type="video/mp4" />
+          </video>
+          <div class="header-overlay">
+            <div class="header">
+              <div class="logo">MENU</div>
+              <div class="register">
+                <button><a href="/login">Login</a></button>
+                <button><a href="/register">Register</a></button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </header>
+
     <nav class="category-nav">
       <ul>
         <% categories.forEach(category => { %>
@@ -29,9 +39,10 @@
         <% }); %>
       </ul>
     </nav>
+
     <main>
       <% categories.forEach(category => { %>
-      <h2>Category: <%= category.name %></h2>
+      <h2 id="<%= category.name.toLowerCase() %>"><%= category.name %></h2>
       <div class="foods">
         <% category.foods.forEach(food => { %>
         <div class="food-item">

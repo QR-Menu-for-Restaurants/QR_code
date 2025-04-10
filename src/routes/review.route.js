@@ -5,16 +5,26 @@ import { reviewSchema } from "../Schema/review.schema.js";
 import { ProtectedMiddleware } from "../middleware/protected.middleware.js";
 import { RolesMiddleware } from "../middleware/roles.middleware.js";
 import { ROLES } from "../constants/role.contant.js";
+import userModel from "../model/user.model.js";
+import foodModel from "../model/food.model.js";
 
 const reviewRouter = Router();
-console.log("salom");
 
 // Yangi review qo'shish
+// console.log("keldi");
+
+reviewRouter.get("/",async (req,res)=>{
+  const users= await userModel.find()
+  const foods=await foodModel.find()
+  
+  
+  res.render("review",{users,foods})
+});
 reviewRouter.post(
-  "/",  
+  "/create",  
   ValidationMiddleware(reviewSchema),
   ProtectedMiddleware,
-  RolesMiddleware([ROLES.ADMIN, ROLES.USER]), // Faqat Admin va Userga ruxsat beriladi
+  RolesMiddleware([ROLES.ALL]), // Faqat Admin va Userga ruxsat beriladi
   reviewController.createReview
 );
 
