@@ -10,6 +10,7 @@ export const ProtectedMiddleware = (isProtected) => {
     }
 
     const token = request.cookies["accessToken"];
+
     if (!token) {
       throw new BaseException("No token provided", 401);
     }

@@ -166,6 +166,7 @@ const refreshUser = async (req, res, next) => {
     }
   }
 };
+
 const getAllUsers = async (req, res) => {
   try {
     const users = await userModel.find();

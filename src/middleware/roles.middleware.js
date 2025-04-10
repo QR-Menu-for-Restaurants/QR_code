@@ -15,6 +15,7 @@ export const RolesMiddleware = (...roles) => {
 
     if (!roles.includes(userRole)) {
       throw new BaseException("Unauthorized access", 403);
+    
     }
     next();
   };
