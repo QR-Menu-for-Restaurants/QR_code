@@ -12,3 +12,10 @@
 {"level":"error","message":"/home/user/Desktop/QR_code/src/views/register.ejs:15\n    13|   <body>\n    14|     <div class=\"container\">\n >> 15|       <% if (error) { %>\n    16|         <div style=\"background-color: #ffcccc; color: #990000; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;\">\n    17|           <%= error %>\n    18|         </div>\n\nerror is not defined","timestamp":"2025-04-12 13:51:32"}
 {"level":"error","message":"/home/user/Desktop/QR_code/src/views/register.ejs:16\n    14|     <div class=\"container\">\n    15|       \n >> 16|       <% if (error) { %>\n    17|         <div style=\"background-color: #ffcccc; color: #990000; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;\">\n    18|           <%= error %>\n    19|         </div>\n\nerror is not defined","timestamp":"2025-04-12 13:56:17"}
 {"level":"error","message":"E11000 duplicate key error collection: food.users index: email_1 dup key: { email: \"tursunboyevx43@gmail.com\" }","timestamp":"2025-04-12 14:00:56"}
+{"level":"error","message":"E11000 duplicate key error collection: food.users index: email_1 dup key: { email: \"tursunboyevx43@gmail.com\" }","timestamp":"2025-04-12 14:19:26"}
+{"level":"error","message":"E11000 duplicate key error collection: food.users index: email_1 dup key: { email: \"tursunboyevx43@gmail.com\" }","timestamp":"2025-04-12 14:26:22"}
+{"level":"error","message":"E11000 duplicate key error collection: food.users index: email_1 dup key: { email: \"tursunboyevx43@gmail.com\" }","timestamp":"2025-04-12 14:36:44"}
+{"level":"error","message":"Unauthorized access","timestamp":"2025-04-12 14:56:32"}
+{"level":"error","message":"Unauthorized access","timestamp":"2025-04-12 14:56:46"}
+{"level":"error","message":"User not found","timestamp":"2025-04-12 14:58:36"}
+{"level":"error","message":"Cannot read properties of null (reading 'password')","timestamp":"2025-04-12 15:02:11"}

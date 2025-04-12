@@ -12,7 +12,7 @@ import {
 import { sendMail } from "../utils/mail.utils.js";
 import { PORT } from "../config/app.config.js";
 import crypto from "crypto";
-import { registerSchema } from "../Schema/user.schema.js";
+import { loginSchema, registerSchema } from "../Schema/user.schema.js";
 
 // Register
 const registerUser = async (request, response, next) => {
@@ -98,16 +98,26 @@ const registerUser = async (request, response, next) => {
 };
 const loginUser = async (req, res, next) => {
   try {
+    const { error } = loginSchema.validate(req.body);
+    if (error) {
+      return res.render("login", {
+        error: error.details[0].message,
+      });
+    }
     const { email, password } = req.body;
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      throw new BaseException("User not found", 404);
+      res.render("login", {
+        error: "User not found",
+      });
     }
 
     const isMatch = await compare(password, user.password);
     if (!isMatch) {
-      throw new BaseException("Invalid password", 401);
+      return res.render("login", {
+        error: "Password is incorrect",
+      });
     }
 
     const accessToken = jwt.sign(
