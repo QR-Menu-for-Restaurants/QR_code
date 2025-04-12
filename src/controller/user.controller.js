@@ -20,9 +20,10 @@ const registerUser = async (request, response, next) => {
     const {error} = registerSchema.validate(request.body);
     if (error) {
       return response.render("register", {
-        error: error.details[0].message,
+        message: error.details[0].message,
       });
     }
+    
     const { name, email, password } = request.body;
 
     if (!name || !email || !password) {
