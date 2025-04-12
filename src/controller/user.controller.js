@@ -12,10 +12,17 @@ import {
 import { sendMail } from "../utils/mail.utils.js";
 import { PORT } from "../config/app.config.js";
 import crypto from "crypto";
+import { registerSchema } from "../Schema/user.schema.js";
 
 // Register
 const registerUser = async (request, response, next) => {
   try {
+    const {error} = registerSchema.validate(request.body);
+    if (error) {
+      return response.render("register", {
+        error: error.details[0].message,
+      });
+    }
     const { name, email, password } = request.body;
 
     if (!name || !email || !password) {
@@ -24,7 +31,9 @@ const registerUser = async (request, response, next) => {
 
     const foundedUser = await userModel.findOne({ email });
     if (foundedUser) {
-      throw new BaseException("User already exists", 409);
+      response.render("register", {
+        error: "User already exists",
+      });
     }
 
     const hashedPassword = await hash(password, 10);
