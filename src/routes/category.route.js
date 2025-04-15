@@ -14,14 +14,14 @@ const categoryRouter = Router();
 
 categoryRouter.get(
   "/",
-  ProtectedMiddleware(false),
+  ProtectedMiddleware(true),
   RolesMiddleware(ROLES.ALL),
   categoryController.getAllCategories
 );
 
 categoryRouter.get(
   "/:id",
-  ProtectedMiddleware(false),
+  ProtectedMiddleware(true),
   RolesMiddleware(ROLES.ALL),
   categoryController.getCategoryById
 );

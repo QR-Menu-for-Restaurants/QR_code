@@ -19,3 +19,4 @@
 {"level":"error","message":"Unauthorized access","timestamp":"2025-04-12 14:56:46"}
 {"level":"error","message":"User not found","timestamp":"2025-04-12 14:58:36"}
 {"level":"error","message":"Cannot read properties of null (reading 'password')","timestamp":"2025-04-12 15:02:11"}
+{"level":"error","message":"jwt is not defined","timestamp":"2025-04-15 12:39:49"}
