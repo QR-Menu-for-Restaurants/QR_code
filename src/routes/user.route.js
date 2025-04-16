@@ -9,7 +9,7 @@ import { ROLES } from "../constants/role.contant.js"
 const userRouter = Router()
 
 userRouter.use("/",(req,res) => {
-    res.render("login");
+    res.render("login", { errors: [], error: null, formData: {} });
 })
 
 userRouter.get("/register", (req, res) => {
