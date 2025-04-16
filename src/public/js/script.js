@@ -10,3 +10,9 @@ togglePassword.addEventListener('click', () => {
         togglePassword.classList.replace('bx-show', 'bx-low-vision');
     }
 });
+setTimeout(() => {
+    const errorBox = document.querySelector('.alert-danger') || document.querySelector('.error-box');
+    if (errorBox) {
+      errorBox.style.display = 'none';
+    }
+  }, 3000);

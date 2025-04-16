@@ -14,37 +14,41 @@ import { PORT } from "../config/app.config.js";
 import crypto from "crypto";
 import { loginSchema, registerSchema } from "../Schema/user.schema.js";
 
-// Register
+
 const registerUser = async (request, response, next) => {
   try {
-    const {error} = registerSchema.validate(request.body);
+    
+    const { error } = registerSchema.validate(request.body);
     if (error) {
       return response.render("register", {
-        message: error.details[0].message,
+        error: error.details[0].message,
       });
     }
-    
+
     const { name, email, password } = request.body;
 
+    
     if (!name || !email || !password) {
-      throw new BaseException("Invalid username or email", 404);
+      return response.render("register", {
+        error: "Barcha maydonlarni to‘ldiring",
+      });
     }
 
     const foundedUser = await userModel.findOne({ email });
     if (foundedUser) {
-      response.render("register", {
-        error: "User already exists",
+      return response.render("register", {
+        error: "Bunday foydalanuvchi allaqachon mavjud",
       });
     }
 
     const hashedPassword = await hash(password, 10);
-
     const user = new userModel({
       name,
       email,
       password: hashedPassword,
     });
 
+  
     const htmlContent = `
       <div style="max-width: 600px; margin: auto; padding: 30px; font-family: Arial, sans-serif; background: #f9f9f9; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
         <div style="text-align: center;">
@@ -91,32 +95,35 @@ const registerUser = async (request, response, next) => {
     user.tokens = { accessToken, refreshToken };
 
     await user.save();
+  
     response.redirect("/categories");
   } catch (error) {
     next(error);
   }
 };
+
 const loginUser = async (req, res, next) => {
   try {
     const { error } = loginSchema.validate(req.body);
     if (error) {
       return res.render("login", {
-        error: error.details[0].message,
+        errors: [error.details[0].message],
       });
     }
+
     const { email, password } = req.body;
     const user = await userModel.findOne({ email });
 
     if (!user) {
-      res.render("login", {
-        error: "User not found",
+      return res.render("login", {
+        errors: ["Foydalanuvchi topilmadi"],
       });
     }
 
     const isMatch = await compare(password, user.password);
     if (!isMatch) {
       return res.render("login", {
-        error: "Password is incorrect",
+        errors: ["Parol noto'g'ri"],
       });
     }
 
@@ -131,15 +138,15 @@ const loginUser = async (req, res, next) => {
       REFRESH_TOKEN_SECRET,
       { expiresIn: REFRESH_TOKEN_EXPIRE_TIME }
     );
-    
+
     res.cookie("accessToken", accessToken, {
-      maxAge: 60 * 60 * 1000,
+      maxAge: 60 * 60 * 1000, 
       httpOnly: true,
     });
 
     res.cookie("refreshToken", refreshToken, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      httpOnly: true,
     });
 
     res.redirect("/categories");
@@ -232,7 +239,7 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-// Forgot Password
+
 const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -269,7 +276,7 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
-// Reset Password
+
 const resetPassword = async (req, res, next) => {
   try {
     const { password } = req.body;

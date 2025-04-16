@@ -14,19 +14,27 @@
     <div class="container">
 
       <% if (typeof error !== "undefined" && error) { %>
-  <div style="background-color: #ffcccc; color: #990000; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
-    <%= error %>
-  </div>
-  <% } %> 
-      
+        <div class="alert-danger"><%= error %></div>
+      <% } %>
+
+      <% if (typeof errors !== "undefined" && errors.length > 0) { %>
+        <div class="alert-danger">
+          <ul>
+            <% errors.forEach(function(error) { %>
+              <li><%= error %></li>
+            <% }) %>
+          </ul>
+        </div>
+      <% } %>
+
       <form action="/register" method="POST">
         <h1>Register</h1>
         <div class="input-box">
-          <input type="text" name="name" placeholder="Username" required />
+          <input type="text" name="name" placeholder="Username" required value="<%= typeof formData !== 'undefined' && formData.name ? formData.name : '' %>" />
           <i class="bx bx-user"></i>
         </div>
         <div class="input-box">
-          <input type="email" name="email" placeholder="Email" required />
+          <input type="email" name="email" placeholder="Email" required value="<%= typeof formData !== 'undefined' && formData.email ? formData.email : '' %>" />
           <i class="bx bx-envelope"></i>
         </div>
         <div class="input-box">
@@ -44,6 +52,7 @@
           <p>Already have an account? <a href="/login">Login</a></p>
         </div>
       </form>
+      
     </div>
     <script src="/js/script.js"></script>
   </body>
